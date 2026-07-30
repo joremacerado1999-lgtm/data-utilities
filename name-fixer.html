@@ -16,8 +16,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #f2f5f9;
-            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #F3E3D0;
+            font-family: -apple-system, "SF Pro", "Segoe UI", Roboto, sans-serif;
             padding: 2rem 1.5rem;
         }
 
@@ -27,17 +27,41 @@
             background: #ffffff;
             border-radius: 1.5rem;
             padding: 2rem 2rem 2.5rem;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
-            border: 1px solid #eef2f7;
+            box-shadow: 0 12px 40px rgba(129, 166, 198, 0.12);
+            border: 1px solid #D2C4B4;
+        }
+
+        .back-row {
+            margin-bottom: 1.2rem;
+        }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #81A6C6;
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .back-btn:hover {
+            background: #6a8fb0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(129, 166, 198, 0.3);
         }
 
         h1 {
             font-size: 1.5rem;
             font-weight: 600;
-            font-family: 'Inter', -apple-system, sans-serif;
-            color: #1e2a3a;
+            color: #2c3e50;
             margin-bottom: 1.5rem;
-            border-bottom: 1px solid #edf1f7;
+            border-bottom: 1px solid #D2C4B4;
             padding-bottom: 1rem;
         }
 
@@ -45,21 +69,21 @@
             width: 100%;
             padding: 1rem 1.2rem;
             font-size: 0.95rem;
-            font-family: 'Inter', 'SF Mono', monospace;
-            border: 1px solid #dce2ec;
+            font-family: inherit;
+            border: 1px solid #D2C4B4;
             border-radius: 1rem;
-            background: #fafcff;
-            color: #1e2a3a;
+            background: #faf8f5;
+            color: #2c3e50;
             resize: vertical;
             min-height: 150px;
             line-height: 1.7;
             transition: border-color 0.2s;
+            outline: none;
         }
 
         textarea:focus {
-            outline: none;
-            border-color: #b0bccf;
-            background: #ffffff;
+            border-color: #81A6C6;
+            box-shadow: 0 0 0 3px rgba(129, 166, 198, 0.1);
         }
 
         .button-group {
@@ -71,20 +95,21 @@
         }
 
         .btn {
-            font-family: 'Inter', sans-serif;
             font-weight: 500;
             font-size: 0.85rem;
             padding: 0.5rem 1.6rem;
             border: none;
             border-radius: 40px;
-            background: #1e2a3a;
+            background: #81A6C6;
             color: #fff;
             cursor: pointer;
             transition: background 0.15s, transform 0.1s;
+            font-family: inherit;
         }
 
         .btn:hover {
-            background: #2c3e50;
+            background: #6a8fb0;
+            transform: translateY(-2px);
         }
 
         .btn:active {
@@ -93,27 +118,26 @@
 
         .btn-outline {
             background: transparent;
-            color: #5a6a7e;
-            box-shadow: inset 0 0 0 1px #d0d8e3;
+            color: #2c3e50;
+            box-shadow: inset 0 0 0 1px #D2C4B4;
             background: #ffffff;
         }
 
         .btn-outline:hover {
-            background: #f0f4fc;
+            background: #F3E3D0;
+            box-shadow: none;
         }
 
         #status {
-            font-family: 'Inter', sans-serif;
             font-size: 0.8rem;
-            color: #4f6a7e;
+            color: #5a6f7f;
             margin-left: 0.3rem;
         }
 
         .output-label {
-            font-family: 'Inter', sans-serif;
             font-size: 0.8rem;
             font-weight: 500;
-            color: #5a6a7e;
+            color: #5a6f7f;
             letter-spacing: 0.05em;
             text-transform: uppercase;
             margin-bottom: 0.6rem;
@@ -125,11 +149,11 @@
         }
 
         .output-label .badge {
-            background: #eef2f7;
+            background: #F3E3D0;
             font-size: 0.6rem;
             padding: 0.15rem 0.7rem;
             border-radius: 20px;
-            color: #5a6a7e;
+            color: #2c3e50;
             font-weight: 400;
             letter-spacing: 0;
             text-transform: none;
@@ -146,90 +170,71 @@
             font-size: 0.7rem;
             padding: 0.25rem 1rem;
             border-radius: 30px;
-            font-family: 'Inter', sans-serif;
             font-weight: 500;
             border: none;
             cursor: pointer;
             transition: background 0.15s;
-            background: #eef2f7;
-            color: #3a4e62;
+            background: #AACDDC;
+            color: #2c3e50;
+            font-family: inherit;
         }
 
         .output-actions .btn-sm:hover {
-            background: #dce2ec;
+            background: #81A6C6;
+            color: #fff;
         }
 
         .output-actions .btn-sm.copy-success {
-            background: #1a7a5a;
+            background: #81A6C6;
             color: #fff;
         }
 
         .result-container {
-            background: #f8faff;
+            background: #faf8f5;
             border-radius: 1rem;
             padding: 1.2rem 1.5rem;
-            border: 1px solid #eef2f7;
+            border: 1px solid #D2C4B4;
             min-height: 80px;
         }
 
         .result-line {
             font-size: 1.2rem;
             font-weight: 700;
-            font-family: 'Georgia', 'Times New Roman', serif;
             line-height: 1.8;
             letter-spacing: 0.02em;
             padding: 0.1rem 0;
-            color: #1e2a3a;
+            color: #2c3e50;
         }
 
         .name-last {
-            color: #1e2a3a;
+            color: #2c3e50;
         }
 
         .name-first {
-            color: #3a4e62;
+            color: #5a6f7f;
         }
 
         .empty-state {
-            color: #aab5c5;
-            font-family: 'Inter', sans-serif;
+            color: #7a8f9f;
             font-weight: 400;
             font-size: 0.95rem;
             font-style: italic;
         }
 
         @media (max-width: 500px) {
-            .app-wrapper {
-                padding: 1.2rem;
-            }
-            .result-container {
-                padding: 0.8rem 1rem;
-            }
-            .result-line {
-                font-size: 1rem;
-                line-height: 1.6;
-            }
-            textarea {
-                font-size: 0.85rem;
-                min-height: 120px;
-            }
-            .output-label {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .output-actions {
-                width: 100%;
-            }
-            .output-actions .btn-sm {
-                flex: 1;
-                text-align: center;
-            }
+            .app-wrapper { padding: 1.2rem; }
+            .result-container { padding: 0.8rem 1rem; }
+            .result-line { font-size: 1rem; }
+            textarea { font-size: 0.85rem; min-height: 120px; }
         }
     </style>
 </head>
 <body>
 
     <div class="app-wrapper">
+        <div class="back-row">
+            <a href="index.html" class="back-btn">← Back to Dashboard</a>
+        </div>
 
         <h1>🔤 Name Fixer</h1>
 
@@ -271,25 +276,11 @@
                 return div.innerHTML;
             }
 
-            /**
-             * Clean text:
-             * - Converts Ã± (mojibake) → N
-             * - Converts ñ → N
-             * - Converts Ñ → N
-             * - Also handles common accented letters
-             * - Finally converts to UPPERCASE
-             */
             function cleanAndUpper(text) {
                 let cleaned = text
-
-                    // ─── MOJIBAKE FIX: "Ã±" appears when UTF-8 is misread as Latin-1 ───
                     .replace(/Ã±/g, 'N')
-
-                    // ─── Proper Unicode ñ / Ñ ───
                     .replace(/ñ/g, 'N')
                     .replace(/Ñ/g, 'N')
-
-                    // ─── Common accented vowels (convert to plain) ───
                     .replace(/[áàâä]/g, 'A')
                     .replace(/[ÁÀÂÄ]/g, 'A')
                     .replace(/[éèêë]/g, 'E')
@@ -302,131 +293,76 @@
                     .replace(/[ÚÙÛÜ]/g, 'U')
                     .replace(/[ç]/g, 'C')
                     .replace(/[Ç]/g, 'C');
-
                 return cleaned.toUpperCase();
             }
 
-            /**
-             * Smart name splitter:
-             * - Handles "First Last" → "LAST, FIRST"
-             * - Handles "First Middle Last" → "LAST, FIRST MIDDLE"
-             * - Handles "First M.Last" → "LAST, FIRST M."  (like "Raffy O.navarra" → "NAVARRA, RAFFY O.")
-             * - Handles "First M. Last" → "LAST, FIRST M."
-             * - Handles already comma-separated names
-             */
             function splitName(raw) {
                 let name = raw.trim();
                 if (!name) return null;
-
-                // ─── If it already has a comma ───
                 if (name.includes(',')) {
                     const parts = name.split(',').map(s => s.trim());
-                    const lastName = parts[0] || '';
-                    const firstName = parts.slice(1).join(' ') || '';
-                    return { lastName, firstName };
+                    return { lastName: parts[0] || '', firstName: parts.slice(1).join(' ') || '' };
                 }
-
-                // ─── No comma — figure it out ───
                 const words = name.split(/\s+/).filter(w => w.length > 0);
                 if (words.length === 0) return null;
-                if (words.length === 1) {
-                    return { lastName: words[0], firstName: '' };
-                }
+                if (words.length === 1) return { lastName: words[0], firstName: '' };
 
-                // ─── Check if the last word contains a dot (e.g., "O.navarra") ───
                 const lastWord = words[words.length - 1];
                 if (lastWord.includes('.')) {
-                    // Split by the LAST dot in the word
                     const dotIndex = lastWord.lastIndexOf('.');
                     const beforeDot = lastWord.substring(0, dotIndex);
                     const afterDot = lastWord.substring(dotIndex + 1);
-
-                    // If afterDot is not empty, use it as last name
                     if (afterDot.length > 0) {
-                        // Build first name: all words except the last word, plus the part before the dot
                         const firstNameParts = words.slice(0, words.length - 1);
-                        if (beforeDot.length > 0) {
-                            firstNameParts.push(beforeDot + '.');
-                        }
-                        const firstName = firstNameParts.join(' ');
-                        return { lastName: afterDot, firstName };
+                        if (beforeDot.length > 0) firstNameParts.push(beforeDot + '.');
+                        return { lastName: afterDot, firstName: firstNameParts.join(' ') };
                     }
                 }
 
-                // ─── Check if the second-to-last word is a single letter with a dot (e.g., "O.") ───
-                // This handles "Raffy O. Navarra" → last name = "Navarra", first = "Raffy O."
                 if (words.length >= 2) {
                     const secondLast = words[words.length - 2];
-                    // Check if it's a single letter followed by a dot (like "O.")
                     if (/^[A-Za-z]\.$/.test(secondLast)) {
-                        const lastName = words[words.length - 1];
-                        const firstName = words.slice(0, words.length - 1).join(' ');
-                        return { lastName, firstName };
+                        return { lastName: words[words.length - 1], firstName: words.slice(0, words.length - 1).join(' ') };
                     }
                 }
 
-                // ─── Default: last word is last name, everything else is first name ───
-                const lastName = words[words.length - 1];
-                const firstName = words.slice(0, words.length - 1).join(' ');
-                return { lastName, firstName };
+                return { lastName: words[words.length - 1], firstName: words.slice(0, words.length - 1).join(' ') };
             }
 
             function normalizeName(raw) {
                 const parts = splitName(raw);
                 if (!parts) return '';
-
                 const { lastName, firstName } = parts;
                 const cleanedLast = cleanAndUpper(lastName);
                 const cleanedFirst = cleanAndUpper(firstName);
-
-                if (!cleanedFirst) {
-                    return `${cleanedLast}, `;
-                }
+                if (!cleanedFirst) return `${cleanedLast}, `;
                 return `${cleanedLast}, ${cleanedFirst}`;
             }
 
             function getFixedLines() {
-                const raw = textarea.value;
-                const lines = raw.split('\n')
+                return textarea.value.split('\n')
                     .map(line => line.trim())
-                    .filter(line => line.length > 0);
-
-                const results = [];
-                lines.forEach(line => {
-                    const fixed = normalizeName(line);
-                    if (fixed) {
-                        results.push(fixed);
-                    }
-                });
-                return results;
+                    .filter(line => line.length > 0)
+                    .map(line => normalizeName(line))
+                    .filter(fixed => fixed);
             }
 
             function generateLines() {
                 const results = getFixedLines();
-
                 if (results.length === 0) {
                     container.innerHTML = `<div class="empty-state">No names to display</div>`;
                     status.textContent = '';
                     return;
                 }
-
                 let html = '';
                 results.forEach(fixed => {
                     const match = fixed.match(/^([^,]+),\s*(.*)/);
                     if (match) {
-                        const lastName = match[1].trim();
-                        const firstName = match[2].trim();
-                        html += `
-                            <div class="result-line">
-                                <span class="name-last">${escapeHtml(lastName)}</span>
-                                <span class="name-first">, ${escapeHtml(firstName)}</span>
-                            </div>
-                        `;
+                        html += `<div class="result-line"><span class="name-last">${escapeHtml(match[1].trim())}</span><span class="name-first">, ${escapeHtml(match[2].trim())}</span></div>`;
                     } else {
                         html += `<div class="result-line"><span class="name-last">${escapeHtml(fixed)}</span></div>`;
                     }
                 });
-
                 container.innerHTML = html;
                 status.textContent = `✅ ${results.length} name(s) fixed`;
             }
@@ -442,32 +378,21 @@
 
             function copyAll() {
                 const results = getFixedLines();
-
                 if (results.length === 0) {
                     copyBtn.textContent = '⚠️ Nothing to copy';
                     copyBtn.className = 'btn-sm';
-                    setTimeout(() => {
-                        copyBtn.textContent = '📋 Copy All';
-                        copyBtn.className = 'btn-sm';
-                    }, 1500);
+                    setTimeout(() => { copyBtn.textContent = '📋 Copy All'; copyBtn.className = 'btn-sm'; }, 1500);
                     return;
                 }
-
                 const textToCopy = results.join('\n');
-
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     navigator.clipboard.writeText(textToCopy)
                         .then(() => {
                             copyBtn.textContent = '✅ Copied!';
                             copyBtn.className = 'btn-sm copy-success';
-                            setTimeout(() => {
-                                copyBtn.textContent = '📋 Copy All';
-                                copyBtn.className = 'btn-sm';
-                            }, 1800);
+                            setTimeout(() => { copyBtn.textContent = '📋 Copy All'; copyBtn.className = 'btn-sm'; }, 1800);
                         })
-                        .catch(() => {
-                            fallbackCopy(textToCopy);
-                        });
+                        .catch(() => fallbackCopy(textToCopy));
                 } else {
                     fallbackCopy(textToCopy);
                 }
@@ -485,17 +410,11 @@
                     document.execCommand('copy');
                     copyBtn.textContent = '✅ Copied!';
                     copyBtn.className = 'btn-sm copy-success';
-                    setTimeout(() => {
-                        copyBtn.textContent = '📋 Copy All';
-                        copyBtn.className = 'btn-sm';
-                    }, 1800);
+                    setTimeout(() => { copyBtn.textContent = '📋 Copy All'; copyBtn.className = 'btn-sm'; }, 1800);
                 } catch (e) {
                     copyBtn.textContent = '❌ Copy failed';
                     copyBtn.className = 'btn-sm';
-                    setTimeout(() => {
-                        copyBtn.textContent = '📋 Copy All';
-                        copyBtn.className = 'btn-sm';
-                    }, 1800);
+                    setTimeout(() => { copyBtn.textContent = '📋 Copy All'; copyBtn.className = 'btn-sm'; }, 1800);
                 }
                 document.body.removeChild(temp);
             }
@@ -508,12 +427,10 @@
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(generateLines, 300);
             });
-
             textarea.addEventListener('paste', function() {
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(generateLines, 80);
             });
-
             textarea.addEventListener('keydown', function(e) {
                 if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
                     e.preventDefault();
@@ -522,7 +439,6 @@
             });
 
             clearAll();
-
             textarea.placeholder = 'Paste names here (one per line)';
         })();
     </script>

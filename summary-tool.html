@@ -13,18 +13,42 @@
             padding: 0;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: #f4f7fc;
+            font-family: -apple-system, "SF Pro", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #F3E3D0;
             padding: 24px;
-            color: #1e293b;
+            color: #2c3e50;
         }
         .container {
             max-width: 1600px;
             margin: 0 auto;
         }
+        .back-row {
+            margin-bottom: 18px;
+        }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #81A6C6;
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .back-btn:hover {
+            background: #6a8fb0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(129, 166, 198, 0.3);
+        }
         header {
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            color: #f8fafc;
+            background: linear-gradient(135deg, #81A6C6, #AACDDC);
+            color: #2c3e50;
             padding: 24px 32px;
             border-radius: 16px;
             margin-bottom: 28px;
@@ -33,7 +57,7 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 16px;
-            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.25);
+            box-shadow: 0 8px 24px rgba(129, 166, 198, 0.25);
         }
         header h1 {
             font-weight: 600;
@@ -46,7 +70,7 @@
         header h1 small {
             font-weight: 400;
             font-size: 0.9rem;
-            opacity: 0.7;
+            opacity: 0.8;
             margin-left: 6px;
         }
         .badge-group {
@@ -55,18 +79,18 @@
             flex-wrap: wrap;
         }
         .badge {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 6px 16px;
             border-radius: 40px;
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.4px;
-            color: #cbd5e1;
+            color: #2c3e50;
         }
         .badge strong {
-            color: #f8fafc;
-            font-weight: 600;
+            color: #1a2a3a;
+            font-weight: 700;
         }
         .upload-area {
             background: #ffffff;
@@ -74,16 +98,16 @@
             padding: 24px 32px;
             margin-bottom: 20px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            border: 2px dashed #d1d9e6;
+            border: 2px dashed #AACDDC;
             text-align: center;
         }
         .upload-area input[type="file"] {
             display: block;
             margin: 12px auto;
             padding: 8px 16px;
-            border: 1px solid #d1d9e6;
+            border: 1px solid #D2C4B4;
             border-radius: 8px;
-            background: #f8fafc;
+            background: #faf8f5;
             cursor: pointer;
             font-family: inherit;
         }
@@ -100,7 +124,7 @@
             padding: 20px 24px;
             margin-bottom: 20px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            border: 1px solid #e9edf2;
+            border: 1px solid #D2C4B4;
             display: flex;
             flex-wrap: wrap;
             align-items: flex-end;
@@ -118,15 +142,15 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.4px;
-            color: #64748b;
+            color: #5a6f7f;
         }
         .config-group select,
         .config-group input {
             padding: 6px 10px;
-            border: 1px solid #d1d9e6;
+            border: 1px solid #D2C4B4;
             border-radius: 6px;
             font-size: 0.85rem;
-            background: #fafcff;
+            background: #faf8f5;
             font-family: inherit;
             outline: none;
             transition: border 0.2s;
@@ -134,8 +158,8 @@
         }
         .config-group select:focus,
         .config-group input:focus {
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+            border-color: #81A6C6;
+            box-shadow: 0 0 0 3px rgba(129, 166, 198, 0.15);
         }
         .config-group .date-row {
             display: flex;
@@ -148,17 +172,17 @@
             padding: 6px 12px;
             font-size: 0.7rem;
             white-space: nowrap;
-            background: #f1f5f9;
-            border: 1px solid #d1d9e6;
+            background: #F3E3D0;
+            border: 1px solid #D2C4B4;
             border-radius: 6px;
             cursor: pointer;
             font-weight: 600;
             font-family: inherit;
-            color: #1e293b;
+            color: #2c3e50;
             transition: background 0.15s;
         }
         .config-group .date-row .btn-sm:hover {
-            background: #e2e8f0;
+            background: #e8d4be;
         }
         .btn {
             border: none;
@@ -171,42 +195,42 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: #f1f5f9;
-            color: #1e293b;
+            background: #AACDDC;
+            color: #2c3e50;
             font-family: inherit;
         }
         .btn:hover {
-            background: #e2e8f0;
+            background: #81A6C6;
             transform: translateY(-1px);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
         }
         .btn-primary {
-            background: #1e293b;
-            color: #f8fafc;
+            background: #81A6C6;
+            color: #fff;
         }
         .btn-primary:hover {
-            background: #0f172a;
+            background: #6a8fb0;
         }
         .btn-success {
-            background: #065f46;
-            color: #f8fafc;
+            background: #81A6C6;
+            color: #fff;
         }
         .btn-success:hover {
-            background: #044e3a;
+            background: #6a8fb0;
         }
         .btn-outline {
             background: transparent;
-            border: 1px solid #d1d9e6;
+            border: 1px solid #D2C4B4;
         }
         .btn-outline:hover {
-            background: #f1f5f9;
+            background: #F3E3D0;
         }
         .btn-danger {
-            background: #b91c1c;
-            color: #f8fafc;
+            background: #c0392b;
+            color: #fff;
         }
         .btn-danger:hover {
-            background: #991b1b;
+            background: #a93226;
         }
         .btn-sm {
             padding: 6px 14px;
@@ -216,7 +240,7 @@
             background: #ffffff;
             border-radius: 16px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            border: 1px solid #e9edf2;
+            border: 1px solid #D2C4B4;
             overflow: hidden;
             display: none;
         }
@@ -231,7 +255,7 @@
             min-width: 1400px;
         }
         thead {
-            background: #f1f5f9;
+            background: #F3E3D0;
             position: sticky;
             top: 0;
             z-index: 5;
@@ -240,8 +264,8 @@
             padding: 14px 12px;
             text-align: left;
             font-weight: 600;
-            color: #1e293b;
-            border-bottom: 2px solid #d1d9e6;
+            color: #2c3e50;
+            border-bottom: 2px solid #D2C4B4;
             white-space: nowrap;
             font-size: 0.7rem;
             text-transform: uppercase;
@@ -249,10 +273,10 @@
         }
         tbody tr {
             transition: background 0.15s;
-            border-bottom: 1px solid #eef2f6;
+            border-bottom: 1px solid #eee8e0;
         }
         tbody tr:hover {
-            background: #f8fafc;
+            background: #faf8f5;
         }
         tbody td {
             padding: 10px 12px;
@@ -263,10 +287,10 @@
         }
         tbody td:first-child {
             font-weight: 500;
-            color: #0f172a;
+            color: #1a2a3a;
         }
         .cell-changed {
-            background: #dbeafe !important;
+            background: #F3E3D0 !important;
             border-radius: 4px;
             padding: 2px 6px;
             margin: -2px -6px;
@@ -274,7 +298,7 @@
         }
         .cell-changed::after {
             content: ' ✦';
-            color: #2563eb;
+            color: #81A6C6;
             font-size: 0.6rem;
             font-weight: 700;
         }
@@ -282,8 +306,8 @@
             display: flex;
             gap: 12px;
             padding: 16px 24px;
-            background: #fafcff;
-            border-bottom: 1px solid #e9edf2;
+            background: #faf8f5;
+            border-bottom: 1px solid #D2C4B4;
             flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
@@ -301,7 +325,7 @@
         }
         .search-box {
             padding: 6px 14px 6px 36px;
-            border: 1px solid #d1d9e6;
+            border: 1px solid #D2C4B4;
             border-radius: 8px;
             font-size: 0.8rem;
             background: #ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E") no-repeat 12px center;
@@ -312,18 +336,18 @@
             font-family: inherit;
         }
         .search-box:focus {
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            border-color: #81A6C6;
+            box-shadow: 0 0 0 3px rgba(129, 166, 198, 0.1);
         }
         .legend {
             display: flex;
             gap: 18px;
             flex-wrap: wrap;
             padding: 12px 24px;
-            background: #fafcff;
-            border-top: 1px solid #e9edf2;
+            background: #faf8f5;
+            border-top: 1px solid #D2C4B4;
             font-size: 0.75rem;
-            color: #475569;
+            color: #5a6f7f;
         }
         .legend-item {
             display: flex;
@@ -335,8 +359,8 @@
             width: 12px;
             height: 12px;
             border-radius: 4px;
-            background: #dbeafe;
-            border: 1px solid #b9d3f0;
+            background: #F3E3D0;
+            border: 1px solid #D2C4B4;
         }
         @media (max-width: 768px) {
             body {
@@ -393,15 +417,15 @@
             width: 8px;
         }
         .table-scroll::-webkit-scrollbar-track {
-            background: #f1f5f9;
+            background: #F3E3D0;
             border-radius: 8px;
         }
         .table-scroll::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
+            background: #AACDDC;
             border-radius: 8px;
         }
         .table-scroll::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+            background: #81A6C6;
         }
         .highlight-row {
             background: #fefce8 !important;
@@ -411,6 +435,10 @@
 <body>
 
     <div class="container" id="app">
+        <div class="back-row">
+            <a href="index.html" class="back-btn">← Back to Dashboard</a>
+        </div>
+
         <header>
             <h1>
                 📋 Data Transformer
@@ -425,7 +453,7 @@
 
         <div class="upload-area" id="uploadArea">
             <h3 style="margin-bottom:8px;">Load your data</h3>
-            <p style="color:#64748b; margin-bottom:12px;">Select an <strong>Excel (.xlsx / .xls)</strong> or CSV file.</p>
+            <p style="color:#5a6f7f; margin-bottom:12px;">Select an <strong>Excel (.xlsx / .xls)</strong> or CSV file.</p>
             <input type="file" id="fileInput" accept=".xlsx,.xls,.csv,.tsv,.txt" />
             <div class="actions">
                 <button class="btn btn-primary" id="loadBtn">⟳ Load & Transform</button>
@@ -490,21 +518,21 @@
             </div>
             <div class="legend">
                 <span class="legend-item">
-                    <span class="legend-swatch"></span> Highlighted cells have been transformed <span style="color:#2563eb;">✦</span>
+                    <span class="legend-swatch"></span> Highlighted cells have been transformed <span style="color:#81A6C6;">✦</span>
                 </span>
                 <span class="legend-item">
-                    <span style="background:#dbeafe;padding:0 8px;border-radius:4px;font-weight:600;">PRIMARY ADDRESS</span> Original: "Primary"
+                    <span style="background:#F3E3D0;padding:0 8px;border-radius:4px;font-weight:600;">PRIMARY ADDRESS</span> Original: "Primary"
                 </span>
                 <span class="legend-item">
-                    <span style="background:#fce7f3;padding:0 8px;border-radius:4px;font-weight:600;">SECONDARY ADDRESS</span> Original: "Collateral"
+                    <span style="background:#AACDDC;padding:0 8px;border-radius:4px;font-weight:600;">SECONDARY ADDRESS</span> Original: "Collateral"
                 </span>
                 <span class="legend-item">
-                    <span style="background:#d1fae5;padding:0 8px;border-radius:4px;font-weight:600;">NCR</span> Original: "* District NCR"
+                    <span style="background:#81A6C6;padding:0 8px;border-radius:4px;font-weight:600;color:#fff;">NCR</span> Original: "* District NCR"
                 </span>
-                <span class="legend-item" style="color:#64748b;">
+                <span class="legend-item" style="color:#5a6f7f;">
                     UNIQ = UID + ADDRESS TYPE (no separator)
                 </span>
-                <span class="legend-item" style="color:#64748b;">
+                <span class="legend-item" style="color:#5a6f7f;">
                     📄 Exported Excel: Calibri font · Size 9
                 </span>
             </div>
@@ -749,7 +777,7 @@
             }
 
             if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="${templateColumns.length}" style="text-align:center;padding:40px;color:#94a3b8;">
+                tbody.innerHTML = `<tr><td colspan="${templateColumns.length}" style="text-align:center;padding:40px;color:#7a8f9f;">
                     No records match your filter.
                 </td></tr>`;
                 return;
@@ -952,7 +980,6 @@
                 return;
             }
 
-            // Get date and format for filename
             let autoDate = document.getElementById('autoDateInput').value;
             if (!autoDate) {
                 const today = new Date();
@@ -961,18 +988,15 @@
             const dateParts = autoDate.split('-');
             const dateFormatted = `${dateParts[1]}-${dateParts[2]}-${dateParts[0]}`;
 
-            // File name: SUMMARY (BANK) (REMARKS) MM-DD-YYYY.xlsx
             const bank = document.getElementById('bankSelect').value || 'NO_BANK';
             const remarks = document.getElementById('remarksSelect').value || 'NO_REMARKS';
             const clean = (str) => str.replace(/[^a-zA-Z0-9\-_\s]/g, '').trim();
             const fileName = `SUMMARY ${clean(bank)} ${clean(remarks)} ${dateFormatted}.xlsx`;
 
-            // Build Excel data: header + rows
             const header = templateColumns.map(c => c.label);
             const rows = data.map(item => {
                 return templateColumns.map(c => {
                     let val = item.mapped[c.key] !== undefined ? item.mapped[c.key] : '';
-                    // Convert AUTOFIELD DATE: 2026-07-30 → 07-30-2026
                     if (c.key === 'autoDate' && val) {
                         const parts = String(val).split('-');
                         if (parts.length === 3) {
@@ -986,7 +1010,6 @@
             const wsData = [header, ...rows];
             const ws = XLSX.utils.aoa_to_sheet(wsData);
 
-            // Apply Calibri font size 9 to ALL cells
             const range = XLSX.utils.decode_range(ws['!ref']);
             for (let R = range.s.r; R <= range.e.r; R++) {
                 for (let C = range.s.c; C <= range.e.c; C++) {
@@ -997,7 +1020,6 @@
                 }
             }
 
-            // Set column widths (optional)
             ws['!cols'] = templateColumns.map(c => ({ wch: Math.max(c.label.length * 1.2, 12) }));
 
             const wb = XLSX.utils.book_new();

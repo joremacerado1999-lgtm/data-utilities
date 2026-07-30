@@ -4,46 +4,71 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PMS 2026 – Multi‑Area Email Lookup</title>
-
-    <!-- 🧸 CUTE TAB ICON (favicon) using 📬 emoji -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📬</text></svg>" />
-
     <style>
         * {
             box-sizing: border-box;
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, "SF Pro", "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
         }
         body {
-            background: #f0f4f9;
+            background: #F3E3D0;
             display: flex;
             justify-content: center;
             padding: 30px 20px;
             margin: 0;
+            min-height: 100vh;
         }
         .container {
             max-width: 850px;
             width: 100%;
-            background: #fff;
+            background: #ffffff;
             border-radius: 28px;
             padding: 30px 35px;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+            box-shadow: 0 12px 40px rgba(129, 166, 198, 0.12);
+            border: 1px solid #D2C4B4;
+        }
+        .back-row {
+            margin-bottom: 18px;
+        }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #81A6C6;
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .back-btn:hover {
+            background: #6a8fb0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(129, 166, 198, 0.3);
         }
         h1 {
             font-size: 26px;
             font-weight: 600;
-            color: #0b1e33;
+            color: #2c3e50;
             margin: 0 0 4px 0;
             display: flex;
             align-items: center;
             gap: 8px;
         }
         .sub {
-            color: #556b86;
+            color: #5a6f7f;
             font-size: 14px;
             margin-top: -2px;
             margin-bottom: 22px;
             padding-left: 14px;
-            border-left: 4px solid #2d7aff;
+            border-left: 4px solid #81A6C6;
         }
         .input-area {
             margin-bottom: 22px;
@@ -51,14 +76,14 @@
         .input-area label {
             display: block;
             font-weight: 500;
-            color: #1e2f44;
+            color: #2c3e50;
             margin-bottom: 6px;
             font-size: 15px;
         }
         .input-area textarea {
             width: 100%;
             padding: 14px 16px;
-            border: 1px solid #cfd9e6;
+            border: 1px solid #D2C4B4;
             border-radius: 16px;
             font-size: 15px;
             resize: vertical;
@@ -66,14 +91,15 @@
             outline: none;
             transition: 0.2s;
             font-family: inherit;
+            background: #faf8f5;
         }
         .input-area textarea:focus {
-            border-color: #2d7aff;
-            box-shadow: 0 0 0 3px rgba(45, 122, 255, 0.15);
+            border-color: #81A6C6;
+            box-shadow: 0 0 0 3px rgba(129, 166, 198, 0.15);
         }
         .input-area .hint {
             font-size: 13px;
-            color: #788da5;
+            color: #7a8f9f;
             margin-top: 6px;
         }
         .actions {
@@ -84,7 +110,7 @@
         }
         .actions button {
             padding: 11px 32px;
-            background: #1d2c41;
+            background: #81A6C6;
             color: white;
             border: none;
             border-radius: 40px;
@@ -92,27 +118,31 @@
             font-weight: 500;
             cursor: pointer;
             transition: 0.2s;
+            font-family: inherit;
         }
         .actions button:hover {
-            background: #0f1a2b;
+            background: #6a8fb0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(129, 166, 198, 0.25);
         }
         .actions button.secondary {
-            background: #e5ecf5;
-            color: #1d2c41;
+            background: #AACDDC;
+            color: #2c3e50;
         }
         .actions button.secondary:hover {
-            background: #d0dceb;
+            background: #81A6C6;
+            color: #fff;
         }
         .result-section {
-            background: #f7faff;
+            background: #faf8f5;
             border-radius: 20px;
             padding: 20px 24px;
-            border: 1px solid #e4ebf5;
+            border: 1px solid #D2C4B4;
         }
         .result-section h3 {
             font-size: 16px;
             font-weight: 600;
-            color: #1e2f44;
+            color: #2c3e50;
             margin: 0 0 8px 0;
             display: flex;
             justify-content: space-between;
@@ -121,14 +151,14 @@
         .result-section h3 span {
             font-weight: 400;
             font-size: 14px;
-            color: #5d738e;
+            color: #5a6f7f;
         }
         .email-list {
             background: white;
             border-radius: 14px;
             padding: 14px 18px;
             min-height: 60px;
-            border: 1px dashed #c9d6e8;
+            border: 1px dashed #D2C4B4;
             font-size: 15px;
             word-break: break-word;
             line-height: 1.7;
@@ -136,15 +166,15 @@
         }
         .email-list .badge {
             display: inline-block;
-            background: #e6eff9;
+            background: #F3E3D0;
             padding: 2px 12px;
             border-radius: 20px;
             margin: 3px 5px 3px 0;
             font-size: 14px;
-            color: #0b1e33;
+            color: #2c3e50;
         }
         .empty-state {
-            color: #8096b0;
+            color: #7a8f9f;
         }
         .table-wrap {
             overflow-x: auto;
@@ -157,15 +187,16 @@
         }
         .table-wrap th {
             text-align: left;
-            background: #e9f0fa;
+            background: #F3E3D0;
             padding: 8px 12px;
             border-radius: 8px 8px 0 0;
-            color: #1d2c41;
+            color: #2c3e50;
             font-weight: 600;
+            border-bottom: 2px solid #D2C4B4;
         }
         .table-wrap td {
             padding: 8px 12px;
-            border-bottom: 1px solid #e4ebf5;
+            border-bottom: 1px solid #D2C4B4;
             vertical-align: top;
         }
         .table-wrap tr:last-child td {
@@ -173,44 +204,38 @@
         }
         .table-wrap .area-name {
             font-weight: 500;
-            color: #0f1e30;
+            color: #2c3e50;
             white-space: nowrap;
         }
         .table-wrap .area-emails {
-            color: #1e3b5a;
-        }
-        .copy-btn {
-            background: none;
-            border: none;
-            color: #2d7aff;
-            font-weight: 500;
-            cursor: pointer;
-            font-size: 14px;
-            padding: 0 6px;
-        }
-        .copy-btn:hover {
-            text-decoration: underline;
+            color: #3a4f5f;
         }
         .footer {
             margin-top: 20px;
             font-size: 13px;
-            color: #8a9eb8;
-            border-top: 1px solid #e4ebf5;
+            color: #5a6f7f;
+            border-top: 1px solid #D2C4B4;
             padding-top: 16px;
         }
         .footer strong {
-            color: #3d5777;
+            color: #3a4f5f;
+        }
+        @media (max-width: 600px) {
+            .container { padding: 20px; }
         }
     </style>
 </head>
 <body>
 <div class="container">
+    <div class="back-row">
+        <a href="index.html" class="back-btn">← Back to Dashboard</a>
+    </div>
+
     <h1>📬 PMS 2026 · Multi‑Area Lookup</h1>
     <div class="sub">Paste multiple FINAL AREA names – get all unique email addresses from the <strong>UPDATED</strong> sheet.</div>
 
     <div class="input-area">
         <label for="areaInput">Enter area names (separate with commas, spaces, or new lines)</label>
-        <!-- ✅ Textarea is now completely empty on load -->
         <textarea id="areaInput" placeholder="e.g. BACOLOD, BATANGAS, CEBU, DAVAO, ZAMBOANGA"></textarea>
         <div class="hint">💡 Case‑insensitive · duplicate areas are ignored · supports all 63+ areas</div>
     </div>
@@ -235,7 +260,7 @@
             <table id="breakdownTable">
                 <thead><tr><th>Area</th><th>Email Addresses</th></tr></thead>
                 <tbody id="breakdownBody">
-                    <tr><td colspan="2" style="color:#8096b0; text-align:center;">No data yet</td></tr>
+                    <tr><td colspan="2" style="color:#7a8f9f; text-align:center;">No data yet</td></tr>
                 </tbody>
             </table>
         </div>
@@ -247,7 +272,6 @@
 </div>
 
 <script>
-    // ----- DATA: from UPDATED sheet of PMS 2026.xlsx -----
     const areaData = {
         "AKLAN": ["mdelmonte@spmadridlaw.com","mesubere@spmadridlaw.com","cltabligan@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
         "ANTIQUE": ["mdelmonte@spmadridlaw.com","mesubere@spmadridlaw.com","cltabligan@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
@@ -308,7 +332,6 @@
         "ZAMBOANGA SIBUGAY": ["mecalugay@spmadridlaw.com","iibaguio@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"]
     };
 
-    // DOM refs
     const textarea = document.getElementById('areaInput');
     const searchBtn = document.getElementById('searchBtn');
     const clearBtn = document.getElementById('clearBtn');
@@ -318,8 +341,7 @@
     const breakdownBody = document.getElementById('breakdownBody');
 
     function normalizeAreas(raw) {
-        const parts = raw.split(/[\n,;]+/).map(s => s.trim()).filter(s => s.length > 0);
-        return parts;
+        return raw.split(/[\n,;]+/).map(s => s.trim()).filter(s => s.length > 0);
     }
 
     function lookupAreas(areaNames) {
@@ -355,7 +377,7 @@
 
         const keys = Object.keys(result);
         if (keys.length === 0) {
-            breakdownBody.innerHTML = `<tr><td colspan="2" style="color:#8096b0; text-align:center;">No areas processed</td></tr>`;
+            breakdownBody.innerHTML = `<tr><td colspan="2" style="color:#7a8f9f; text-align:center;">No areas processed</td></tr>`;
             return;
         }
         let rows = '';
@@ -377,7 +399,7 @@
         if (areaNames.length === 0) {
             countDisplay.textContent = '0 found';
             uniqueDisplay.innerHTML = `<span class="empty-state">Please enter at least one area name.</span>`;
-            breakdownBody.innerHTML = `<tr><td colspan="2" style="color:#8096b0; text-align:center;">No areas entered</td></tr>`;
+            breakdownBody.innerHTML = `<tr><td colspan="2" style="color:#7a8f9f; text-align:center;">No areas entered</td></tr>`;
             return;
         }
         const lookup = lookupAreas(areaNames);
@@ -396,7 +418,7 @@
         textarea.value = '';
         countDisplay.textContent = '0 found';
         uniqueDisplay.innerHTML = `<span class="empty-state">Paste areas above and click “Get Emails”</span>`;
-        breakdownBody.innerHTML = `<tr><td colspan="2" style="color:#8096b0; text-align:center;">No data yet</td></tr>`;
+        breakdownBody.innerHTML = `<tr><td colspan="2" style="color:#7a8f9f; text-align:center;">No data yet</td></tr>`;
     });
 
     copyAllBtn.addEventListener('click', () => {
@@ -415,8 +437,6 @@
             alert('Copy failed. You can manually select and copy the emails.');
         });
     });
-
-    // ✅ No auto‑run on load – the page starts completely clean.
 </script>
 </body>
 </html>
