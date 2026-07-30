@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PMS 2026 – Multi‑Area Email Lookup</title>
+
+    <!-- 🧸 CUTE TAB ICON (favicon) using 📬 emoji -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📬</text></svg>" />
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        }
+        body {
+            background: #f0f4f9;
+            display: flex;
+            justify-content: center;
+            padding: 30px 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 850px;
+            width: 100%;
+            background: #fff;
+            border-radius: 28px;
+            padding: 30px 35px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+        }
+        h1 {
+            font-size: 26px;
+            font-weight: 600;
+            color: #0b1e33;
+            margin: 0 0 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .sub {
+            color: #556b86;
+            font-size: 14px;
+            margin-top: -2px;
+            margin-bottom: 22px;
+            padding-left: 14px;
+            border-left: 4px solid #2d7aff;
+        }
+        .input-area {
+            margin-bottom: 22px;
+        }
+        .input-area label {
+            display: block;
+            font-weight: 500;
+            color: #1e2f44;
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+        .input-area textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #cfd9e6;
+            border-radius: 16px;
+            font-size: 15px;
+            resize: vertical;
+            min-height: 110px;
+            outline: none;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .input-area textarea:focus {
+            border-color: #2d7aff;
+            box-shadow: 0 0 0 3px rgba(45, 122, 255, 0.15);
+        }
+        .input-area .hint {
+            font-size: 13px;
+            color: #788da5;
+            margin-top: 6px;
+        }
+        .actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+        }
+        .actions button {
+            padding: 11px 32px;
+            background: #1d2c41;
+            color: white;
+            border: none;
+            border-radius: 40px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .actions button:hover {
+            background: #0f1a2b;
+        }
+        .actions button.secondary {
+            background: #e5ecf5;
+            color: #1d2c41;
+        }
+        .actions button.secondary:hover {
+            background: #d0dceb;
+        }
+        .result-section {
+            background: #f7faff;
+            border-radius: 20px;
+            padding: 20px 24px;
+            border: 1px solid #e4ebf5;
+        }
+        .result-section h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e2f44;
+            margin: 0 0 8px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .result-section h3 span {
+            font-weight: 400;
+            font-size: 14px;
+            color: #5d738e;
+        }
+        .email-list {
+            background: white;
+            border-radius: 14px;
+            padding: 14px 18px;
+            min-height: 60px;
+            border: 1px dashed #c9d6e8;
+            font-size: 15px;
+            word-break: break-word;
+            line-height: 1.7;
+            margin-bottom: 18px;
+        }
+        .email-list .badge {
+            display: inline-block;
+            background: #e6eff9;
+            padding: 2px 12px;
+            border-radius: 20px;
+            margin: 3px 5px 3px 0;
+            font-size: 14px;
+            color: #0b1e33;
+        }
+        .empty-state {
+            color: #8096b0;
+        }
+        .table-wrap {
+            overflow-x: auto;
+            margin-top: 6px;
+        }
+        .table-wrap table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        .table-wrap th {
+            text-align: left;
+            background: #e9f0fa;
+            padding: 8px 12px;
+            border-radius: 8px 8px 0 0;
+            color: #1d2c41;
+            font-weight: 600;
+        }
+        .table-wrap td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #e4ebf5;
+            vertical-align: top;
+        }
+        .table-wrap tr:last-child td {
+            border-bottom: none;
+        }
+        .table-wrap .area-name {
+            font-weight: 500;
+            color: #0f1e30;
+            white-space: nowrap;
+        }
+        .table-wrap .area-emails {
+            color: #1e3b5a;
+        }
+        .copy-btn {
+            background: none;
+            border: none;
+            color: #2d7aff;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0 6px;
+        }
+        .copy-btn:hover {
+            text-decoration: underline;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 13px;
+            color: #8a9eb8;
+            border-top: 1px solid #e4ebf5;
+            padding-top: 16px;
+        }
+        .footer strong {
+            color: #3d5777;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📬 PMS 2026 · Multi‑Area Lookup</h1>
+    <div class="sub">Paste multiple FINAL AREA names – get all unique email addresses from the <strong>UPDATED</strong> sheet.</div>
+
+    <div class="input-area">
+        <label for="areaInput">Enter area names (separate with commas, spaces, or new lines)</label>
+        <!-- ✅ Textarea is now completely empty on load -->
+        <textarea id="areaInput" placeholder="e.g. BACOLOD, BATANGAS, CEBU, DAVAO, ZAMBOANGA"></textarea>
+        <div class="hint">💡 Case‑insensitive · duplicate areas are ignored · supports all 63+ areas</div>
+    </div>
+
+    <div class="actions">
+        <button id="searchBtn">🔍 Get Emails</button>
+        <button id="clearBtn" class="secondary">✕ Clear</button>
+        <button id="copyAllBtn" class="secondary" style="margin-left:auto;">📋 Copy All Emails</button>
+    </div>
+
+    <div class="result-section">
+        <h3>
+            <span>📧 Unique Email Addresses</span>
+            <span id="countDisplay">0 found</span>
+        </h3>
+        <div class="email-list" id="uniqueEmailDisplay">
+            <span class="empty-state">Paste areas above and click “Get Emails”</span>
+        </div>
+
+        <h3 style="margin-top:20px;">📋 Area Breakdown</h3>
+        <div class="table-wrap" id="breakdownContainer">
+            <table id="breakdownTable">
+                <thead><tr><th>Area</th><th>Email Addresses</th></tr></thead>
+                <tbody id="breakdownBody">
+                    <tr><td colspan="2" style="color:#8096b0; text-align:center;">No data yet</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="footer">
+        <strong>Tip:</strong> The “Copy All Emails” button copies the unique list (comma‑separated) to your clipboard.
+    </div>
+</div>
+
+<script>
+    // ----- DATA: from UPDATED sheet of PMS 2026.xlsx -----
+    const areaData = {
+        "AKLAN": ["mdelmonte@spmadridlaw.com","mesubere@spmadridlaw.com","cltabligan@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "ANTIQUE": ["mdelmonte@spmadridlaw.com","mesubere@spmadridlaw.com","cltabligan@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "BACOLOD": ["bgdabucol@spmadridlaw.com","japaculanang@spmadridlaw.com","mrcapanas@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "BATANGAS": ["qgcaraulia@spmadridlaw.com","cralbis@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com","bemercado@spmadridlaw.com"],
+        "BENGUET": ["jatamondong@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "BUKIDNON": ["mfsalarda@spmadridlaw.com","asbautista@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "BULACAN": ["aptasic@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "CAMANAVA": ["gisulleza@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "CAMARINES NORTE": ["qgcaraulia@spmadridlaw.com","cralbis@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "CAMARINES SUR": ["qgcaraulia@spmadridlaw.com","cralbis@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "CAPIZ": ["mdelmonte@spmadridlaw.com","mesubere@spmadridlaw.com","cltabligan@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "CAVITE": ["facontado@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "CDO": ["mfsalarda@spmadridlaw.com","asbautista@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "CEBU": ["bgdabucol@spmadridlaw.com","ajtingal@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "COTABATO": ["aamaminasacan@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "DAVAO": ["empolinar@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "DAVAO DE ORO": ["empolinar@spmadridlaw.com","kvrevilla@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "DAVAO DEL NORTE": ["empolinar@spmadridlaw.com","kvrevilla@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "DAVAO ORIENTAL": ["empolinar@spmadridlaw.com","kvrevilla@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "DIPOLOG": ["mecalugay@spmadridlaw.com","asbautista@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "GENSAN": ["aamaminasacan@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "GUIMARAS": ["mdelmonte@spmadridlaw.com","mesubere@spmadridlaw.com","cltabligan@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "ILOILO": ["mdelmonte@spmadridlaw.com","mesubere@spmadridlaw.com","cltabligan@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "ISABELA": ["jatamondong@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "KORONADAL": ["aamaminasacan@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "LA UNION": ["jatamondong@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "LAGUNA": ["cralbis@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com","jpmercadillo@spmadridlaw.com","jrcondino@spmadridlaw.com"],
+        "LANAO DEL NORTE": ["mfsalarda@spmadridlaw.com","asbautista@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "LAS PINAS": ["gisulleza@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "MAKATI": ["gisulleza@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "MANDALUYONG": ["gisulleza@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "MANILA": ["gisulleza@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "MARIKINA": ["gisulleza@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "MISAMIS OCCIDENTAL": ["mecalugay@spmadridlaw.com","iibaguio@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "MUNTINLUPA": ["gisulleza@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "NEGRO OCCIDENTAL": ["bgdabucol@spmadridlaw.com","japaculanang@spmadridlaw.com","mrcapanas@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "NEGROS ORIENTAL": ["bgdabucol@spmadridlaw.com","japaculanang@spmadridlaw.com","mrcapanas@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "NUEVA ECIJA": ["aptasic@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "OCCIDENTAL MINDORO": ["qgcaraulia@spmadridlaw.com","cralbis@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "ORIENTAL MINDORO": ["qgcaraulia@spmadridlaw.com","cralbis@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "PAGADIAN": ["mecalugay@spmadridlaw.com","iibaguio@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "PAMPANGA": ["jalazo@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "PANGASINAN": ["jatamondong@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "PARANAQUE": ["gisulleza@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "PASAY": ["gisulleza@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "PASIG": ["gisulleza@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "POLOMOLOK": ["aamaminasacan@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "QUEZON CITY": ["gisulleza@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "QUEZON PROVINCE": ["qgcaraulia@spmadridlaw.com","cralbis@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "RIZAL": ["gisulleza@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "SARANGANI": ["aamaminasacan@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "SORSOGON": ["qgcaraulia@spmadridlaw.com","cralbis@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "SULTAN KUDARAT": ["aamaminasacan@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "TAGUIG": ["gisulleza@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "TARLAC": ["jalazo@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "ZAMBOANGA": ["nmukim@spmadridlaw.com","asbautista@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"],
+        "ZAMBOANGA SIBUGAY": ["mecalugay@spmadridlaw.com","iibaguio@spmadridlaw.com","jcverceles@spmadridlaw.com","mmpabondia@spmadridlaw.com"]
+    };
+
+    // DOM refs
+    const textarea = document.getElementById('areaInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const copyAllBtn = document.getElementById('copyAllBtn');
+    const uniqueDisplay = document.getElementById('uniqueEmailDisplay');
+    const countDisplay = document.getElementById('countDisplay');
+    const breakdownBody = document.getElementById('breakdownBody');
+
+    function normalizeAreas(raw) {
+        const parts = raw.split(/[\n,;]+/).map(s => s.trim()).filter(s => s.length > 0);
+        return parts;
+    }
+
+    function lookupAreas(areaNames) {
+        const result = {};
+        const allEmails = [];
+        const seenAreas = new Set();
+        for (let raw of areaNames) {
+            const key = raw.toUpperCase().trim();
+            if (!key || seenAreas.has(key)) continue;
+            seenAreas.add(key);
+            const emails = areaData[key];
+            if (emails) {
+                result[key] = emails.slice();
+                allEmails.push(...emails);
+            } else {
+                result[key] = null;
+            }
+        }
+        return { result, allEmails };
+    }
+
+    function render(areaLookup) {
+        const { result, allEmails } = areaLookup;
+        const unique = [...new Set(allEmails)];
+        countDisplay.textContent = `${unique.length} found`;
+
+        if (unique.length === 0) {
+            uniqueDisplay.innerHTML = `<span class="empty-state">No matching emails — check your area names.</span>`;
+        } else {
+            const badges = unique.map(email => `<span class="badge">${email}</span>`).join(' ');
+            uniqueDisplay.innerHTML = badges;
+        }
+
+        const keys = Object.keys(result);
+        if (keys.length === 0) {
+            breakdownBody.innerHTML = `<tr><td colspan="2" style="color:#8096b0; text-align:center;">No areas processed</td></tr>`;
+            return;
+        }
+        let rows = '';
+        for (const key of keys) {
+            const emails = result[key];
+            if (emails) {
+                const uniqueEmails = [...new Set(emails)];
+                rows += `<tr><td class="area-name">${key}</td><td class="area-emails">${uniqueEmails.join(', ')}</td></tr>`;
+            } else {
+                rows += `<tr><td class="area-name">${key}</td><td style="color:#b91c1c;">❌ Area not found</td></tr>`;
+            }
+        }
+        breakdownBody.innerHTML = rows;
+    }
+
+    function processInput() {
+        const raw = textarea.value;
+        const areaNames = normalizeAreas(raw);
+        if (areaNames.length === 0) {
+            countDisplay.textContent = '0 found';
+            uniqueDisplay.innerHTML = `<span class="empty-state">Please enter at least one area name.</span>`;
+            breakdownBody.innerHTML = `<tr><td colspan="2" style="color:#8096b0; text-align:center;">No areas entered</td></tr>`;
+            return;
+        }
+        const lookup = lookupAreas(areaNames);
+        render(lookup);
+    }
+
+    searchBtn.addEventListener('click', processInput);
+    textarea.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && e.ctrlKey) {
+            e.preventDefault();
+            processInput();
+        }
+    });
+
+    clearBtn.addEventListener('click', () => {
+        textarea.value = '';
+        countDisplay.textContent = '0 found';
+        uniqueDisplay.innerHTML = `<span class="empty-state">Paste areas above and click “Get Emails”</span>`;
+        breakdownBody.innerHTML = `<tr><td colspan="2" style="color:#8096b0; text-align:center;">No data yet</td></tr>`;
+    });
+
+    copyAllBtn.addEventListener('click', () => {
+        const badges = uniqueDisplay.querySelectorAll('.badge');
+        if (badges.length === 0) {
+            alert('No emails to copy. Please search for areas first.');
+            return;
+        }
+        const emails = Array.from(badges).map(b => b.textContent.trim());
+        const text = emails.join(', ');
+        navigator.clipboard.writeText(text).then(() => {
+            const old = copyAllBtn.textContent;
+            copyAllBtn.textContent = '✅ Copied!';
+            setTimeout(() => copyAllBtn.textContent = old, 1500);
+        }).catch(() => {
+            alert('Copy failed. You can manually select and copy the emails.');
+        });
+    });
+
+    // ✅ No auto‑run on load – the page starts completely clean.
+</script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Toolbox · PMS Utilities</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f0f4f9;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1.5rem;
+        }
+
+        .dashboard {
+            max-width: 1100px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 2.5rem 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06);
+            border: 1px solid #eef2f7;
+        }
+
+        .header {
+            margin-bottom: 2.5rem;
+            border-bottom: 2px solid #f0f4f9;
+            padding-bottom: 1.5rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0b1e33;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header h1 small {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: #6b85a0;
+            margin-left: 4px;
+        }
+
+        .header p {
+            color: #556b86;
+            margin-top: 6px;
+            font-size: 1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: #f8faff;
+            border-radius: 18px;
+            padding: 1.8rem 1.5rem 1.5rem;
+            border: 1px solid #eef2f7;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+            border-color: #c8d8e8;
+            background: #ffffff;
+        }
+
+        .card .icon {
+            font-size: 2.4rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .card h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #0b1e33;
+            margin-bottom: 4px;
+        }
+
+        .card .desc {
+            font-size: 0.85rem;
+            color: #6b85a0;
+            line-height: 1.5;
+            flex: 1;
+        }
+
+        .card .badge {
+            margin-top: 0.8rem;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #2d7d46;
+            background: #e8f5ee;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            align-self: flex-start;
+            font-weight: 600;
+        }
+
+        .footer {
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eef2f7;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: #8a9eb8;
+        }
+
+        .footer a {
+            color: #2d7d46;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .dashboard {
+                padding: 1.5rem;
+            }
+            .header h1 {
+                font-size: 1.4rem;
+                flex-wrap: wrap;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard">
+        <div class="header">
+            <h1>
+                🧰 Toolbox
+                <small>· PMS Utilities</small>
+            </h1>
+            <p>Internal tools for data processing, name formatting, email lookup, and reference code extraction.</p>
+        </div>
+
+        <div class="grid">
+
+            <a href="summary-tool.html" class="card">
+                <span class="icon">📋</span>
+                <h3>Data Transformer</h3>
+                <div class="desc">Upload Excel/CSV, transform addresses, generate SUMMARY template with UNIQ keys.</div>
+                <span class="badge">Excel · CSV</span>
+            </a>
+
+            <a href="name-fixer.html" class="card">
+                <span class="icon">🔤</span>
+                <h3>Name Fixer</h3>
+                <div class="desc">Convert names to UPPERCASE, handle mojibake (Ã± → N), format as LAST, FIRST.</div>
+                <span class="badge">Text · Bulk</span>
+            </a>
+
+            <a href="email-lookup.html" class="card">
+                <span class="icon">📬</span>
+                <h3>Multi-Area Email Lookup</h3>
+                <div class="desc">Paste area names (BACOLOD, CEBU, etc.) and get all unique email addresses.</div>
+                <span class="badge">PMS 2026</span>
+            </a>
+
+            <a href="reference-code.html" class="card">
+                <span class="icon">📄</span>
+                <h3>Get Reference Code</h3>
+                <div class="desc">Upload DLX extraction Excel, search by UNIQ, get Doc Codes with address types.</div>
+                <span class="badge">Excel · DLX</span>
+            </a>
+
+        </div>
+
+        <div class="footer">
+            <span>© 2026 · Internal use only</span>
+            <span>
+                Built with 💚 &nbsp;·&nbsp;
+                <a href="https://github.com" target="_blank">GitHub</a>
+            </span>
+        </div>
+    </div>
+
+</body>
+</html>

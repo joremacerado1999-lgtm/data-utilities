@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GET REFERENCE CODE (from DLX extraction)</title>
+
+    <!-- SheetJS for reading/writing Excel files -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js">
+    </script>
+
+    <style>
+        /* ---------- Reset & Base ---------- */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f0f5f2;
+            color: #1a3a2a;
+            padding: 2rem 1rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .app {
+            max-width: 1000px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(45, 125, 70, 0.15);
+            padding: 2rem 2rem 2.5rem;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(2px);
+        }
+
+        /* ---------- Header ---------- */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e8f5ee;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #2d7d46, #5ab87a);
+            border-radius: 4px;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(145deg, #1a3a2a, #2d7d46);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header h1 small {
+            font-size: 0.85rem;
+            font-weight: 400;
+            -webkit-text-fill-color: #6b8a7a;
+            background: none;
+            color: #6b8a7a;
+            margin-left: 0.5rem;
+        }
+
+        .header .badge {
+            background: linear-gradient(145deg, #e8f5ee, #d4eddf);
+            color: #1a4a2a;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        /* ---------- Upload Area ---------- */
+        .upload-area {
+            border: 2.5px dashed #c8e0d4;
+            border-radius: 20px;
+            padding: 2.8rem 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fafffd;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .upload-area:hover,
+        .upload-area.dragover {
+            border-color: #2d7d46;
+            background: #f0faf4;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px -10px rgba(45, 125, 70, 0.15);
+        }
+
+        .upload-area:active {
+            transform: scale(0.99);
+        }
+
+        .upload-area .icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .upload-area:hover .icon {
+            transform: scale(1.1) rotate(-2deg);
+        }
+
+        .upload-area p {
+            font-size: 1.1rem;
+            color: #1a4a2a;
+            font-weight: 500;
+        }
+
+        .upload-area .sub {
+            font-size: 0.85rem;
+            color: #7a9a8a;
+            margin-top: 0.25rem;
+        }
+
+        .upload-area input[type="file"] {
+            display: none;
+        }
+
+        /* ---------- File Info ---------- */
+        .file-info {
+            display: none;
+            align-items: center;
+            gap: 1rem;
+            background: #f0faf4;
+            border-radius: 14px;
+            padding: 0.6rem 1.2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            border-left: 4px solid #2d7d46;
+        }
+
+        .file-info.visible {
+            display: flex;
+        }
+
+        .file-info .name {
+            font-weight: 600;
+            color: #1a3a2a;
+        }
+
+        .file-info .size {
+            color: #5a7a6a;
+            font-size: 0.85rem;
+        }
+
+        .file-info .stats {
+            color: #1a4a2a;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: #d4eddf;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+        }
+
+        .file-info .remove-btn {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: #b03a4a;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 8px;
+            transition: background 0.15s;
+        }
+
+        .file-info .remove-btn:hover {
+            background: #fce8eb;
+        }
+
+        /* ---------- Table Wrapper (HIDDEN) ---------- */
+        .table-wrapper {
+            display: none;
+        }
+
+        /* ---------- Download Area (HIDDEN) ---------- */
+        .download-area {
+            display: none;
+        }
+
+        /* ---------- Toast ---------- */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #1a3a2a;
+            color: white;
+            padding: 0.8rem 2.2rem;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: opacity 0.35s, transform 0.35s;
+            pointer-events: none;
+            z-index: 999;
+            white-space: nowrap;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ---------- Responsive ---------- */
+        @media (max-width: 800px) {
+            .app {
+                padding: 1.2rem;
+                border-radius: 18px;
+            }
+            .header h1 {
+                font-size: 1.3rem;
+            }
+            .header h1 small {
+                display: block;
+                margin-left: 0;
+                font-size: 0.75rem;
+            }
+            .upload-area {
+                padding: 1.8rem 1rem;
+            }
+            .upload-area .icon {
+                font-size: 2.2rem;
+            }
+            .toast {
+                font-size: 0.8rem;
+                padding: 0.6rem 1.5rem;
+                white-space: normal;
+                max-width: 90%;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .app {
+                padding: 0.8rem;
+                border-radius: 14px;
+            }
+            .header h1 {
+                font-size: 1.1rem;
+            }
+            .upload-area p {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* ---------- Search Box ---------- */
+        .search-box {
+            display: none;
+            margin-top: 1.2rem;
+            padding: 1rem 1.2rem;
+            background: #f7fcf9;
+            border-radius: 16px;
+            border: 1px solid #c8e0d4;
+        }
+
+        .search-box.visible {
+            display: block;
+        }
+
+        .search-box h4 {
+            font-size: 0.95rem;
+            color: #1a3a2a;
+            margin-bottom: 0.4rem;
+        }
+
+        .search-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            align-items: stretch;
+        }
+
+        .search-row textarea {
+            flex: 1 1 220px;
+            padding: 0.6rem 1rem;
+            border: 1.5px solid #c8e0d4;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            min-width: 160px;
+            resize: vertical;
+            background: white;
+            line-height: 1.4;
+        }
+
+        .search-row textarea:focus {
+            border-color: #2d7d46;
+            box-shadow: 0 0 0 3px rgba(45, 125, 70, 0.1);
+        }
+
+        .search-row button {
+            background: linear-gradient(145deg, #2d7d46, #236a39);
+            color: white;
+            border: none;
+            padding: 0.5rem 2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            align-self: flex-end;
+            height: fit-content;
+            min-height: 44px;
+            box-shadow: 0 4px 8px -2px rgba(45, 125, 70, 0.3);
+        }
+
+        .search-row button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px -4px rgba(45, 125, 70, 0.35);
+        }
+
+        .search-row button:active {
+            transform: scale(0.96);
+        }
+
+        .search-row button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .search-result {
+            margin-top: 0.7rem;
+            padding: 0.6rem 1rem;
+            border-radius: 12px;
+            background: #ffffff;
+            border: 1px solid #e8f5ee;
+            font-size: 0.9rem;
+            min-height: 2.4rem;
+            color: #1a3a2a;
+            display: none;
+            max-height: 420px;
+            overflow-y: auto;
+        }
+
+        .search-result.visible {
+            display: block;
+        }
+
+        /* Result table inside search */
+        .search-result .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+        }
+
+        .search-result .result-table th {
+            background: #e8f5ee;
+            color: #1a3a2a;
+            padding: 0.4rem 0.6rem;
+            border: 1px solid #c8e0d4;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+
+        .search-result .result-table td {
+            padding: 0.35rem 0.6rem;
+            border: 1px solid #eef3f8;
+            vertical-align: top;
+        }
+
+        .search-result .result-table tr:nth-child(even) td {
+            background: #fafffd;
+        }
+
+        .search-result .result-table .status-found {
+            color: #2d7d46;
+            font-weight: 600;
+        }
+        .search-result .result-table .status-missing {
+            color: #b03a4a;
+            font-weight: 600;
+        }
+        .search-result .result-table .doc-code-cell {
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+            color: #1a3a2a;
+        }
+        .search-result .result-table .uniq-cell {
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            word-break: break-all;
+            max-width: 180px;
+        }
+        .search-result .result-table .dl-code-cell {
+            font-family: 'Courier New', monospace;
+            font-weight: 500;
+        }
+        .search-result .result-table .addr-type-cell {
+            font-weight: 500;
+            color: #2d7d46;
+        }
+        .search-result .result-table .match-badge {
+            display: inline-block;
+            background: #d9ede3;
+            color: #1a5a2a;
+            font-size: 0.6rem;
+            padding: 0.1rem 0.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .search-result .summary {
+            margin-top: 0.5rem;
+            padding: 0.4rem 0.6rem;
+            background: #f0faf4;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: #1a4a2a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        /* ---------- Copy Buttons ---------- */
+        .copy-btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            align-items: center;
+        }
+
+        .copy-btn {
+            color: white;
+            border: none;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            white-space: nowrap;
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-2px);
+        }
+        .copy-btn:active {
+            transform: scale(0.95);
+        }
+        .copy-btn.copied {
+            background: #1f8b4c !important;
+            box-shadow: 0 4px 8px -2px rgba(31, 139, 76, 0.3);
+        }
+        .copy-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .copy-btn.uniq-btn {
+            background: linear-gradient(145deg, #2d7d46, #236a39);
+            box-shadow: 0 2px 6px -1px rgba(45, 125, 70, 0.3);
+        }
+        .copy-btn.uniq-btn:hover {
+            box-shadow: 0 6px 12px -2px rgba(45, 125, 70, 0.4);
+        }
+        .copy-btn.doc-btn {
+            background: linear-gradient(145deg, #6b8f7a, #4a6a5a);
+            box-shadow: 0 2px 6px -1px rgba(74, 106, 90, 0.3);
+        }
+        .copy-btn.doc-btn:hover {
+            box-shadow: 0 6px 12px -2px rgba(74, 106, 90, 0.4);
+        }
+        .copy-btn.both-btn {
+            background: linear-gradient(145deg, #4a7a5a, #3a6a4a);
+            box-shadow: 0 2px 6px -1px rgba(74, 122, 90, 0.3);
+        }
+        .copy-btn.both-btn:hover {
+            box-shadow: 0 6px 12px -2px rgba(74, 122, 90, 0.4);
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .results-header .title {
+            font-weight: 600;
+            color: #1a3a2a;
+        }
+
+        .results-header .refresh-note {
+            font-size: 0.7rem;
+            color: #6b8a7a;
+        }
+
+        /* Slide down animation for results */
+        @keyframes slideDownResults {
+            0% {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.98);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .search-result.slide-down {
+            animation: slideDownResults 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app" id="app">
+        <!-- Header -->
+        <div class="header">
+            <h1>
+                📋 GET REFERENCE CODE
+                <small>from DLX extraction · Excel tool</small>
+            </h1>
+            <span class="badge">📁 .xlsx · .xls · .csv</span>
+        </div>
+
+        <!-- Upload -->
+        <div class="upload-area" id="uploadArea">
+            <span class="icon">📂</span>
+            <p>Drop your Excel file here, or click to browse</p>
+            <div class="sub">Expects columns: Client · Doc Code · DL Code · Name · Address · Final Area · Processed At · Processed By · Output Format</div>
+            <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" />
+        </div>
+
+        <!-- File info -->
+        <div class="file-info" id="fileInfo">
+            <span class="name" id="fileName">file.xlsx</span>
+            <span class="size" id="fileSize">—</span>
+            <span class="stats" id="rowStats"></span>
+            <button class="remove-btn" id="removeFileBtn">✕ remove</button>
+        </div>
+
+        <!-- Table Wrapper (hidden) – kept for internal processing only -->
+        <div class="table-wrapper" id="tableWrapper">
+            <table id="dataTable" style="display:none;">
+                <thead id="tableHead"></thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+
+        <!-- Search Box for multiple UNIQ lookup -->
+        <div class="search-box" id="searchBox">
+            <h4>🔍 Find Doc Codes by UNIQ</h4>
+            <div class="search-row">
+                <textarea id="uniqSearchInput" rows="4" placeholder="Paste UNIQ values, one per line or comma-separated"></textarea>
+                <button id="uniqSearchBtn">Find All</button>
+            </div>
+            <!-- help text removed -->
+            <div class="search-result" id="searchResult"></div>
+        </div>
+
+        <!-- Download area (hidden) – kept for potential future use -->
+        <div class="download-area" id="downloadArea">
+            <div class="btn-group">
+                <button class="btn-download" id="downloadBtn">⬇ Download .xlsx</button>
+                <button class="btn-download secondary" id="downloadCsvBtn">⬇ Download .csv</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ---------- DOM refs ----------
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const fileInfo = document.getElementById('fileInfo');
+            const fileName = document.getElementById('fileName');
+            const fileSize = document.getElementById('fileSize');
+            const rowStats = document.getElementById('rowStats');
+            const removeFileBtn = document.getElementById('removeFileBtn');
+            // table refs kept but not used for display
+            const dataTable = document.getElementById('dataTable');
+            const tableHead = document.getElementById('tableHead');
+            const tableBody = document.getElementById('tableBody');
+            // download buttons hidden
+
+            // Search elements
+            const searchBox = document.getElementById('searchBox');
+            const uniqSearchInput = document.getElementById('uniqSearchInput');
+            const uniqSearchBtn = document.getElementById('uniqSearchBtn');
+            const searchResult = document.getElementById('searchResult');
+
+            // ---------- State ----------
+            let rawData = [];
+            let headers = [];
+            let processedData = [];
+            let processedHeaders = [];
+            let docCodeIdx = -1;
+            let dlCodeIdx = -1;
+            let uniqIdx = -1;
+            let lastFoundRows = [];
+
+            const EXPECTED_COLS = [
+                'Client', 'Doc Code', 'DL Code', 'Name', 'Address',
+                'Final Area', 'Processed At', 'Processed By', 'Output Format'
+            ];
+
+            // ---------- Helpers ----------
+            function showToast(msg, duration = 3000) {
+                const toast = document.getElementById('toast');
+                toast.textContent = msg;
+                toast.classList.add('show');
+                clearTimeout(toast._hide);
+                toast._hide = setTimeout(() => toast.classList.remove('show'), duration);
+            }
+
+            function formatFileSize(bytes) {
+                if (bytes < 1024) return bytes + ' B';
+                if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+                return (bytes / 1048576).toFixed(1) + ' MB';
+            }
+
+            function normalizeHeader(h) {
+                if (h === undefined || h === null) return '';
+                return String(h).trim();
+            }
+
+            function detectAddressType(docCode) {
+                if (docCode === undefined || docCode === null) return '';
+                const str = String(docCode).toLowerCase();
+                if (str.includes('p')) return 'primary address';
+                if (str.includes('s')) return 'secondary address';
+                return '';
+            }
+
+            // ---------- Process data ----------
+            function processData(dataRows, headerRow) {
+                const colMap = {};
+                headerRow.forEach((h, idx) => {
+                    const normalized = normalizeHeader(h);
+                    colMap[normalized] = idx;
+                });
+
+                const missing = EXPECTED_COLS.filter(col => !(col in colMap));
+                if (missing.length > 0) {
+                    showToast(`Missing columns: ${missing.join(', ')}. Please check your file.`, 4000);
+                    return null;
+                }
+
+                const docCodeIdxLocal = colMap['Doc Code'];
+                const dlCodeIdxLocal = colMap['DL Code'];
+
+                const newHeaders = [...headerRow, 'Address Type', 'UNIQ'];
+
+                const newRows = dataRows.map(row => {
+                    const rowData = [...row];
+                    while (rowData.length < headerRow.length) rowData.push('');
+
+                    const docCode = rowData[docCodeIdxLocal] || '';
+                    const dlCode = rowData[dlCodeIdxLocal] || '';
+
+                    const addressType = detectAddressType(docCode);
+                    const uniq = dlCode + addressType;
+
+                    rowData.push(addressType);
+                    rowData.push(uniq);
+
+                    return rowData;
+                });
+
+                return {
+                    headers: newHeaders,
+                    rows: newRows,
+                    docCodeIdx: docCodeIdxLocal,
+                    dlCodeIdx: dlCodeIdxLocal,
+                    uniqIdx: newHeaders.length - 1
+                };
+            }
+
+            // ---------- Render table (now does nothing visible) ----------
+            function renderTable(headers, rows) {
+                if (rows && rows.length > 0) {
+                    rowStats.textContent = `${rows.length} rows · ${headers.length} columns`;
+                } else {
+                    rowStats.textContent = '';
+                }
+                // No table rendering.
+            }
+
+            // ---------- Load file ----------
+            function loadFile(file) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    try {
+                        const data = new Uint8Array(e.target.result);
+                        const workbook = XLSX.read(data, { type: 'array', cellDates: true });
+
+                        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                        const json = XLSX.utils.sheet_to_json(firstSheet, { header: 1, defval: '' });
+
+                        if (!json || json.length === 0) {
+                            showToast('The file appears empty.', 2500);
+                            return;
+                        }
+
+                        const headerRow = json[0].map(h => normalizeHeader(h));
+                        const dataRows = json.slice(1);
+
+                        const numCols = headerRow.length;
+                        const cleanedRows = dataRows.map(row => {
+                            const r = [...row];
+                            while (r.length < numCols) r.push('');
+                            return r.slice(0, numCols);
+                        });
+
+                        rawData = cleanedRows;
+                        headers = headerRow;
+
+                        const result = processData(cleanedRows, headerRow);
+                        if (!result) return;
+
+                        processedHeaders = result.headers;
+                        processedData = result.rows;
+                        docCodeIdx = result.docCodeIdx;
+                        dlCodeIdx = result.dlCodeIdx;
+                        uniqIdx = result.uniqIdx;
+
+                        fileName.textContent = file.name;
+                        fileSize.textContent = formatFileSize(file.size);
+                        fileInfo.classList.add('visible');
+                        searchBox.classList.add('visible');
+
+                        renderTable(processedHeaders, processedData);
+
+                        uniqSearchBtn.disabled = false;
+                        searchResult.classList.remove('visible');
+                        searchResult.innerHTML = '';
+                        lastFoundRows = [];
+
+                        showToast(`✅ Loaded "${file.name}" — ${processedData.length} rows processed`, 2500);
+
+                    } catch (err) {
+                        console.error(err);
+                        showToast('Error reading file: ' + err.message, 3000);
+                    }
+                };
+
+                reader.onerror = function() {
+                    showToast('Error reading file.', 2500);
+                };
+
+                reader.readAsArrayBuffer(file);
+            }
+
+            // ---------- Reset ----------
+            function resetAll() {
+                rawData = [];
+                headers = [];
+                processedData = [];
+                processedHeaders = [];
+                docCodeIdx = -1;
+                dlCodeIdx = -1;
+                uniqIdx = -1;
+                lastFoundRows = [];
+                fileInfo.classList.remove('visible');
+                searchBox.classList.remove('visible');
+                fileInput.value = '';
+                rowStats.textContent = '';
+                tableHead.innerHTML = '';
+                tableBody.innerHTML = '';
+                uniqSearchBtn.disabled = true;
+                searchResult.classList.remove('visible');
+                searchResult.innerHTML = '';
+                uniqSearchInput.value = '';
+            }
+
+            // ---------- Search function (case‑insensitive) ----------
+            function findDocByUniq() {
+                const rawInput = uniqSearchInput.value;
+                const uniqList = rawInput.split(/[\n,]+/)
+                    .map(s => s.trim())
+                    .filter(s => s.length > 0);
+
+                if (uniqList.length === 0) {
+                    showToast('Please paste at least one UNIQ value.', 1500);
+                    return;
+                }
+
+                if (processedData.length === 0 || uniqIdx === -1) {
+                    showToast('No data loaded. Please upload a file first.', 2000);
+                    return;
+                }
+
+                // Build map with lowercase keys for case‑insensitive matching
+                const uniqMap = new Map();
+                for (const row of processedData) {
+                    const uniqVal = row[uniqIdx] !== undefined ? String(row[uniqIdx]) : '';
+                    const key = uniqVal.toLowerCase();
+                    if (!uniqMap.has(key)) {
+                        uniqMap.set(key, row);
+                    }
+                }
+
+                const foundRows = [];
+                let foundCount = 0;
+                let rowsHtml = '';
+
+                for (const uniq of uniqList) {
+                    const row = uniqMap.get(uniq.toLowerCase());
+                    if (row) {
+                        const docCode = row[docCodeIdx] !== undefined ? String(row[docCodeIdx]) : '';
+                        const dlCode = row[dlCodeIdx] !== undefined ? String(row[dlCodeIdx]) : '';
+                        const addressType = row[uniqIdx - 1] !== undefined ? String(row[uniqIdx - 1]) : '';
+                        const reconstructed = dlCode + addressType;
+                        const matchExact = (reconstructed.toLowerCase() === uniq.toLowerCase());
+
+                        foundRows.push({ uniq, docCode, dlCode, addressType, reconstructed, matchExact });
+                        foundCount++;
+
+                        rowsHtml += `
+                            <tr>
+                                <td class="uniq-cell">${uniq}</td>
+                                <td class="dl-code-cell">${dlCode}</td>
+                                <td class="addr-type-cell">${addressType}</td>
+                                <td class="doc-code-cell">${docCode}</td>
+                                <td>
+                                    <span class="status-found">✅ Found</span>
+                                    ${matchExact ? ' <span class="match-badge">✓ verified</span>' : ' <span style="color:#b07a3a;font-size:0.7rem;">⚠ mismatch</span>'}
+                                </td>
+                            </tr>
+                        `;
+                    } else {
+                        rowsHtml += `
+                            <tr>
+                                <td class="uniq-cell">${uniq}</td>
+                                <td>—</td>
+                                <td>—</td>
+                                <td>—</td>
+                                <td><span class="status-missing">❌ Not found</span></td>
+                            </tr>
+                        `;
+                    }
+                }
+
+                lastFoundRows = foundRows;
+                const hasResults = foundRows.length > 0;
+
+                let resultsHtml = `
+                    <div class="results-header">
+                        <span class="title">Results (${uniqList.length} entries · ${foundCount} found)</span>
+                        <div style="display:flex;flex-wrap:wrap;gap:0.4rem;align-items:center;">
+                            <div class="copy-btn-group">
+                                <button class="copy-btn both-btn" id="copyBothBtn" ${!hasResults ? 'disabled' : ''}>
+                                    📋 Both
+                                </button>
+                                <button class="copy-btn uniq-btn" id="copyUniqBtn" ${!hasResults ? 'disabled' : ''}>
+                                    📋 UNIQ
+                                </button>
+                                <button class="copy-btn doc-btn" id="copyDocBtn" ${!hasResults ? 'disabled' : ''}>
+                                    📋 Doc Code
+                                </button>
+                            </div>
+                            <span class="refresh-note">Click "Find All" to refresh</span>
+                        </div>
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr>
+                                <th>UNIQ (searched)</th>
+                                <th>DL Code</th>
+                                <th>Address Type</th>
+                                <th>→ Doc Code</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${rowsHtml}
+                        </tbody>
+                    </table>
+                    <div class="summary">
+                        <span>Found <strong>${foundCount}</strong> out of <strong>${uniqList.length}</strong> entries.
+                        ${foundCount < uniqList.length ? ' Check spelling of missing values.' : ''}
+                        ${foundCount > 0 ? ' ✓ matched.' : ''}</span>
+                    </div>
+                `;
+
+                searchResult.classList.remove('slide-down');
+                void searchResult.offsetWidth;
+                searchResult.innerHTML = resultsHtml;
+                searchResult.classList.add('visible');
+                searchResult.classList.add('slide-down');
+
+                document.getElementById('copyBothBtn')?.addEventListener('click', () => copyResults('both'));
+                document.getElementById('copyUniqBtn')?.addEventListener('click', () => copyResults('uniq'));
+                document.getElementById('copyDocBtn')?.addEventListener('click', () => copyResults('doc'));
+            }
+
+            // ---------- Copy Results ----------
+            function copyResults(mode) {
+                if (lastFoundRows.length === 0) {
+                    showToast('No results to copy.', 1500);
+                    return;
+                }
+
+                let text = '';
+                let label = '';
+
+                if (mode === 'both') {
+                    for (const item of lastFoundRows) {
+                        text += `${item.uniq}\t${item.docCode}\n`;
+                    }
+                    label = `${lastFoundRows.length} pairs`;
+                } else if (mode === 'uniq') {
+                    for (const item of lastFoundRows) {
+                        text += `${item.uniq}\n`;
+                    }
+                    label = `${lastFoundRows.length} UNIQ values`;
+                } else if (mode === 'doc') {
+                    for (const item of lastFoundRows) {
+                        text += `${item.docCode}\n`;
+                    }
+                    label = `${lastFoundRows.length} Doc Codes`;
+                }
+
+                let btnId = '';
+                if (mode === 'both') btnId = 'copyBothBtn';
+                else if (mode === 'uniq') btnId = 'copyUniqBtn';
+                else if (mode === 'doc') btnId = 'copyDocBtn';
+
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(text)
+                        .then(() => {
+                            showToast(`📋 Copied ${label} to clipboard!`, 2000);
+                            flashCopyButton(btnId);
+                        })
+                        .catch(() => {
+                            fallbackCopy(text, btnId, label);
+                        });
+                } else {
+                    fallbackCopy(text, btnId, label);
+                }
+            }
+
+            function fallbackCopy(text, btnId, label) {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast(`📋 Copied ${label} to clipboard!`, 2000);
+                    flashCopyButton(btnId);
+                } catch (err) {
+                    showToast('Failed to copy. Please copy manually.', 2000);
+                }
+                document.body.removeChild(textarea);
+            }
+
+            function flashCopyButton(btnId) {
+                if (!btnId) return;
+                const btn = document.getElementById(btnId);
+                if (btn) {
+                    const originalText = btn.textContent;
+                    btn.textContent = '✅ Copied!';
+                    btn.classList.add('copied');
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.classList.remove('copied');
+                    }, 2000);
+                }
+            }
+
+            // ---------- Event listeners ----------
+            uploadArea.addEventListener('click', function(e) {
+                if (e.target.tagName !== 'INPUT') {
+                    fileInput.click();
+                }
+            });
+
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    const file = files[0];
+                    const ext = file.name.split('.').pop().toLowerCase();
+                    if (['xlsx', 'xls', 'csv'].includes(ext)) {
+                        loadFile(file);
+                    } else {
+                        showToast('Please drop an Excel or CSV file.', 2500);
+                    }
+                }
+            });
+
+            fileInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    loadFile(this.files[0]);
+                }
+            });
+
+            removeFileBtn.addEventListener('click', function() {
+                resetAll();
+                showToast('File removed.', 1200);
+            });
+
+            uniqSearchBtn.addEventListener('click', findDocByUniq);
+            uniqSearchInput.addEventListener('keydown', function(e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    e.preventDefault();
+                    findDocByUniq();
+                }
+            });
+
+            // ---------- Initial state ----------
+            resetAll();
+
+            console.log('📋 GET REFERENCE CODE ready — case‑insensitive matching active (UI messages removed).');
+
+        })();
+    </script>
+
+</body>
+</html>
