@@ -12,25 +12,78 @@
             margin: 0;
             padding: 0;
         }
+
+        /* ── rainbow background layer ── */
+        .rainbow-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+            background: #f0ebe5;
+        }
+        .rainbow {
+            height: 100vh;
+            width: 0;
+            top: 0;
+            position: absolute;
+            transform: rotate(10deg);
+            transform-origin: top right;
+            will-change: right;
+        }
+        .h {
+            box-shadow: 0 0 50vh 40vh rgba(255, 255, 255, 0.85);
+            width: 100vw;
+            height: 0;
+            bottom: 0;
+            left: 0;
+            position: absolute;
+            pointer-events: none;
+        }
+        .v {
+            box-shadow: 0 0 35vw 25vw rgba(255, 255, 255, 0.80);
+            width: 0;
+            height: 100vh;
+            bottom: 0;
+            left: 0;
+            position: absolute;
+            pointer-events: none;
+        }
+        @keyframes slide {
+            from { right: -25vw; }
+            to { right: 125vw; }
+        }
+
         body {
             font-family: -apple-system, "SF Pro", "Segoe UI", Roboto, sans-serif;
-            background: #F3E3D0;
-            color: #2c3e50;
             padding: 2rem 1rem;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: flex-start;
+            background: #f0ebe5;
+            overflow: hidden;
+            position: relative;
         }
+
         .app {
+            position: relative;
+            z-index: 1;
             max-width: 1000px;
             width: 100%;
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
             border-radius: 32px;
-            box-shadow: 0 25px 50px -12px rgba(129, 166, 198, 0.2);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.10), 0 0 0 1px rgba(255, 255, 255, 0.6);
             padding: 2rem 2rem 2.5rem;
-            border: 1px solid #D2C4B4;
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
+
+        .app * {
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.7);
+        }
+
         .back-row {
             margin-bottom: 1.2rem;
         }
@@ -38,7 +91,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: #81A6C6;
+            background: rgba(129, 166, 198, 0.85);
             color: #fff;
             padding: 8px 20px;
             border-radius: 40px;
@@ -49,12 +102,14 @@
             border: none;
             cursor: pointer;
             font-family: inherit;
+            backdrop-filter: blur(4px);
         }
         .back-btn:hover {
             background: #6a8fb0;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(129, 166, 198, 0.3);
         }
+
         .header {
             display: flex;
             align-items: center;
@@ -63,7 +118,7 @@
             gap: 1rem;
             margin-bottom: 2rem;
             padding-bottom: 1rem;
-            border-bottom: 2px solid #D2C4B4;
+            border-bottom: 2px solid rgba(210, 196, 180, 0.4);
             position: relative;
         }
         .header::after {
@@ -80,62 +135,51 @@
             font-size: 1.8rem;
             font-weight: 800;
             letter-spacing: -0.02em;
-            color: #2c3e50;
+            color: #1e2f3a;
         }
         .header h1 small {
             font-size: 0.85rem;
             font-weight: 400;
-            color: #5a6f7f;
+            color: #2c3e50;
             margin-left: 0.5rem;
         }
         .header .badge {
-            background: #F3E3D0;
-            color: #2c3e50;
+            background: rgba(243, 227, 208, 0.7);
+            color: #1e2f3a;
             padding: 0.4rem 1.2rem;
             border-radius: 40px;
             font-size: 0.8rem;
             font-weight: 600;
-            border: 1px solid #D2C4B4;
+            border: 1px solid rgba(210, 196, 180, 0.3);
         }
+
         .upload-area {
-            border: 2.5px dashed #D2C4B4;
+            border: 2.5px dashed rgba(210, 196, 180, 0.5);
             border-radius: 20px;
             padding: 2.8rem 1.5rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: #faf8f5;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(4px);
             margin-bottom: 1.5rem;
         }
         .upload-area:hover, .upload-area.dragover {
             border-color: #81A6C6;
-            background: #F3E3D0;
+            background: rgba(243, 227, 208, 0.4);
             transform: translateY(-3px);
             box-shadow: 0 12px 30px -10px rgba(129, 166, 198, 0.15);
         }
-        .upload-area .icon {
-            font-size: 3rem;
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-        .upload-area p {
-            font-size: 1.1rem;
-            color: #2c3e50;
-            font-weight: 500;
-        }
-        .upload-area .sub {
-            font-size: 0.85rem;
-            color: #5a6f7f;
-            margin-top: 0.25rem;
-        }
-        .upload-area input[type="file"] {
-            display: none;
-        }
+        .upload-area .icon { font-size: 3rem; display: block; margin-bottom: 0.5rem; }
+        .upload-area p { font-size: 1.1rem; color: #1e2f3a; font-weight: 500; }
+        .upload-area .sub { font-size: 0.85rem; color: #2c3e50; margin-top: 0.25rem; }
+        .upload-area input[type="file"] { display: none; }
+
         .file-info {
             display: none;
             align-items: center;
             gap: 1rem;
-            background: #F3E3D0;
+            background: rgba(243, 227, 208, 0.5);
             border-radius: 14px;
             padding: 0.6rem 1.2rem;
             margin-bottom: 1.5rem;
@@ -143,13 +187,13 @@
             border-left: 4px solid #81A6C6;
         }
         .file-info.visible { display: flex; }
-        .file-info .name { font-weight: 600; color: #2c3e50; }
-        .file-info .size { color: #5a6f7f; font-size: 0.85rem; }
+        .file-info .name { font-weight: 600; color: #1e2f3a; }
+        .file-info .size { color: #2c3e50; font-size: 0.85rem; }
         .file-info .stats {
-            color: #2c3e50;
+            color: #1e2f3a;
             font-size: 0.85rem;
             font-weight: 600;
-            background: #AACDDC;
+            background: rgba(170, 205, 220, 0.5);
             padding: 0.2rem 0.8rem;
             border-radius: 20px;
         }
@@ -165,15 +209,17 @@
             border-radius: 8px;
             transition: background 0.15s;
         }
-        .file-info .remove-btn:hover { background: #fce8eb; }
+        .file-info .remove-btn:hover { background: rgba(252, 232, 235, 0.6); }
+
         .table-wrapper { display: none; }
         .download-area { display: none; }
+
         .toast {
             position: fixed;
             bottom: 2rem;
             left: 50%;
             transform: translateX(-50%) translateY(20px);
-            background: #2c3e50;
+            background: #1e2f3a;
             color: white;
             padding: 0.8rem 2.2rem;
             border-radius: 40px;
@@ -187,6 +233,7 @@
             white-space: nowrap;
         }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
         @media (max-width: 800px) {
             .app { padding: 1.2rem; }
             .header h1 { font-size: 1.3rem; }
@@ -200,18 +247,20 @@
             .header h1 { font-size: 1.1rem; }
             .upload-area p { font-size: 0.9rem; }
         }
+
         .search-box {
             display: none;
             margin-top: 1.2rem;
             padding: 1rem 1.2rem;
-            background: #faf8f5;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(4px);
             border-radius: 16px;
-            border: 1px solid #D2C4B4;
+            border: 1px solid rgba(210, 196, 180, 0.3);
         }
         .search-box.visible { display: block; }
         .search-box h4 {
             font-size: 0.95rem;
-            color: #2c3e50;
+            color: #1e2f3a;
             margin-bottom: 0.4rem;
         }
         .search-row {
@@ -223,7 +272,7 @@
         .search-row textarea {
             flex: 1 1 220px;
             padding: 0.6rem 1rem;
-            border: 1.5px solid #D2C4B4;
+            border: 1.5px solid rgba(210, 196, 180, 0.5);
             border-radius: 12px;
             font-size: 0.9rem;
             font-family: inherit;
@@ -231,7 +280,8 @@
             transition: border-color 0.2s, box-shadow 0.2s;
             min-width: 160px;
             resize: vertical;
-            background: white;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(4px);
             line-height: 1.4;
         }
         .search-row textarea:focus {
@@ -239,7 +289,7 @@
             box-shadow: 0 0 0 3px rgba(129, 166, 198, 0.1);
         }
         .search-row button {
-            background: #81A6C6;
+            background: rgba(129, 166, 198, 0.85);
             color: white;
             border: none;
             padding: 0.5rem 2rem;
@@ -253,6 +303,7 @@
             height: fit-content;
             min-height: 44px;
             font-family: inherit;
+            backdrop-filter: blur(4px);
         }
         .search-row button:hover {
             background: #6a8fb0;
@@ -266,15 +317,17 @@
             transform: none;
             box-shadow: none;
         }
+
         .search-result {
             margin-top: 0.7rem;
             padding: 0.6rem 1rem;
             border-radius: 12px;
-            background: #ffffff;
-            border: 1px solid #D2C4B4;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(210, 196, 180, 0.3);
             font-size: 0.9rem;
             min-height: 2.4rem;
-            color: #2c3e50;
+            color: #1e2f3a;
             display: none;
             max-height: 420px;
             overflow-y: auto;
@@ -287,10 +340,10 @@
             margin-top: 0.3rem;
         }
         .search-result .result-table th {
-            background: #F3E3D0;
-            color: #2c3e50;
+            background: rgba(243, 227, 208, 0.7);
+            color: #1e2f3a;
             padding: 0.4rem 0.6rem;
-            border: 1px solid #D2C4B4;
+            border: 1px solid rgba(210, 196, 180, 0.3);
             text-align: left;
             font-weight: 600;
             font-size: 0.7rem;
@@ -301,20 +354,20 @@
         }
         .search-result .result-table td {
             padding: 0.35rem 0.6rem;
-            border: 1px solid #eee8e0;
+            border: 1px solid rgba(238, 232, 224, 0.5);
             vertical-align: top;
         }
-        .search-result .result-table tr:nth-child(even) td { background: #faf8f5; }
+        .search-result .result-table tr:nth-child(even) td { background: rgba(255, 255, 255, 0.3); }
         .search-result .result-table .status-found { color: #81A6C6; font-weight: 600; }
         .search-result .result-table .status-missing { color: #b03a4a; font-weight: 600; }
-        .search-result .result-table .doc-code-cell { font-weight: 600; font-family: monospace; color: #2c3e50; }
+        .search-result .result-table .doc-code-cell { font-weight: 600; font-family: monospace; color: #1e2f3a; }
         .search-result .result-table .uniq-cell { font-family: monospace; font-size: 0.75rem; word-break: break-all; max-width: 180px; }
         .search-result .result-table .dl-code-cell { font-family: monospace; font-weight: 500; }
         .search-result .result-table .addr-type-cell { font-weight: 500; color: #81A6C6; }
         .search-result .result-table .match-badge {
             display: inline-block;
-            background: #F3E3D0;
-            color: #2c3e50;
+            background: rgba(243, 227, 208, 0.7);
+            color: #1e2f3a;
             font-size: 0.6rem;
             padding: 0.1rem 0.5rem;
             border-radius: 10px;
@@ -323,16 +376,17 @@
         .search-result .summary {
             margin-top: 0.5rem;
             padding: 0.4rem 0.6rem;
-            background: #F3E3D0;
+            background: rgba(243, 227, 208, 0.5);
             border-radius: 6px;
             font-size: 0.85rem;
-            color: #2c3e50;
+            color: #1e2f3a;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 0.5rem;
         }
+
         .copy-btn-group {
             display: flex;
             flex-wrap: wrap;
@@ -367,10 +421,11 @@
         }
         .copy-btn.uniq-btn { background: #81A6C6; }
         .copy-btn.uniq-btn:hover { background: #6a8fb0; }
-        .copy-btn.doc-btn { background: #AACDDC; color: #2c3e50; }
+        .copy-btn.doc-btn { background: #AACDDC; color: #1e2f3a; }
         .copy-btn.doc-btn:hover { background: #81A6C6; color: #fff; }
-        .copy-btn.both-btn { background: #AACDDC; color: #2c3e50; }
+        .copy-btn.both-btn { background: #AACDDC; color: #1e2f3a; }
         .copy-btn.both-btn:hover { background: #81A6C6; color: #fff; }
+
         .results-header {
             display: flex;
             justify-content: space-between;
@@ -379,8 +434,9 @@
             gap: 0.5rem;
             margin-bottom: 0.5rem;
         }
-        .results-header .title { font-weight: 600; color: #2c3e50; }
-        .results-header .refresh-note { font-size: 0.7rem; color: #5a6f7f; }
+        .results-header .title { font-weight: 600; color: #1e2f3a; }
+        .results-header .refresh-note { font-size: 0.7rem; color: #2c3e50; }
+
         @keyframes slideDownResults {
             0% { opacity: 0; transform: translateY(-30px) scale(0.98); }
             100% { opacity: 1; transform: translateY(0) scale(1); }
@@ -391,6 +447,12 @@
     </style>
 </head>
 <body>
+
+    <!-- RAINBOW BACKGROUND -->
+    <div class="rainbow-bg" id="rainbowBg">
+        <div class="h"></div>
+        <div class="v"></div>
+    </div>
 
     <div class="app" id="app">
         <div class="back-row">
@@ -439,6 +501,42 @@
     <div class="toast" id="toast"></div>
 
     <script>
+        // ── rainbow generator ──
+        (function() {
+            const container = document.getElementById('rainbowBg');
+            const length = 25;
+            const animationTime = 45;
+            const purple = 'rgb(232 121 249)';
+            const blue = 'rgb(96 165 250)';
+            const green = 'rgb(94 234 212)';
+            const perms = [
+                [purple, blue, green],
+                [purple, green, blue],
+                [green, purple, blue],
+                [green, blue, purple],
+                [blue, green, purple],
+                [blue, purple, green]
+            ];
+            for (let i = 1; i <= length; i++) {
+                const el = document.createElement('div');
+                el.className = 'rainbow';
+                const perm = perms[Math.floor(Math.random() * perms.length)];
+                const shadow =
+                    `-160px 0 100px 50px white, ` +
+                    `-80px 0 80px 40px ${perm[0]}, ` +
+                    `0 0 80px 40px ${perm[1]}, ` +
+                    `80px 0 80px 40px ${perm[2]}, ` +
+                    `160px 0 100px 50px white`;
+                el.style.boxShadow = shadow;
+                const duration = animationTime - (animationTime / length / 2) * i;
+                const delay = -(i / length) * animationTime;
+                el.style.animation = `${duration}s linear infinite slide`;
+                el.style.animationDelay = `${delay}s`;
+                container.insertBefore(el, container.querySelector('.h'));
+            }
+        })();
+
+        // ── reference code logic ──
         (function() {
             'use strict';
 
@@ -884,6 +982,5 @@
             console.log('📋 GET REFERENCE CODE ready — case‑insensitive matching active.');
         })();
     </script>
-
 </body>
 </html>

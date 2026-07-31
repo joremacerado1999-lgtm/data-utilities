@@ -13,16 +13,69 @@
             margin: 0;
             padding: 0;
         }
+
+        /* ── rainbow background layer ── */
+        .rainbow-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+            background: #f0ebe5;
+        }
+        .rainbow {
+            height: 100vh;
+            width: 0;
+            top: 0;
+            position: absolute;
+            transform: rotate(10deg);
+            transform-origin: top right;
+            will-change: right;
+        }
+        .h {
+            box-shadow: 0 0 50vh 40vh rgba(255, 255, 255, 0.85);
+            width: 100vw;
+            height: 0;
+            bottom: 0;
+            left: 0;
+            position: absolute;
+            pointer-events: none;
+        }
+        .v {
+            box-shadow: 0 0 35vw 25vw rgba(255, 255, 255, 0.80);
+            width: 0;
+            height: 100vh;
+            bottom: 0;
+            left: 0;
+            position: absolute;
+            pointer-events: none;
+        }
+        @keyframes slide {
+            from { right: -25vw; }
+            to { right: 125vw; }
+        }
+
         body {
             font-family: -apple-system, "SF Pro", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: #F3E3D0;
             padding: 24px;
-            color: #2c3e50;
+            color: #1e2f3a;
+            background: #f0ebe5;
+            overflow: hidden;
+            position: relative;
+            min-height: 100vh;
         }
+
         .container {
+            position: relative;
+            z-index: 1;
             max-width: 1600px;
             margin: 0 auto;
         }
+
+        .container * {
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.7);
+        }
+
         .back-row {
             margin-bottom: 18px;
         }
@@ -30,7 +83,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: #81A6C6;
+            background: rgba(129, 166, 198, 0.85);
             color: #fff;
             padding: 8px 20px;
             border-radius: 40px;
@@ -41,15 +94,19 @@
             border: none;
             cursor: pointer;
             font-family: inherit;
+            backdrop-filter: blur(4px);
         }
         .back-btn:hover {
             background: #6a8fb0;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(129, 166, 198, 0.3);
         }
+
         header {
-            background: linear-gradient(135deg, #81A6C6, #AACDDC);
-            color: #2c3e50;
+            background: rgba(129, 166, 198, 0.25);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: #1e2f3a;
             padding: 24px 32px;
             border-radius: 16px;
             margin-bottom: 28px;
@@ -58,7 +115,8 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 16px;
-            box-shadow: 0 8px 24px rgba(129, 166, 198, 0.25);
+            box-shadow: 0 8px 24px rgba(129, 166, 198, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
         header h1 {
             font-weight: 600;
@@ -87,28 +145,28 @@
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.4px;
-            color: #2c3e50;
+            color: #1e2f3a;
         }
-        .badge strong {
-            color: #1a2a3a;
-            font-weight: 700;
-        }
+        .badge strong { color: #1a2a3a; font-weight: 700; }
+
         .upload-area {
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
             border-radius: 16px;
             padding: 24px 32px;
             margin-bottom: 20px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            border: 2px dashed #AACDDC;
+            border: 2px dashed rgba(170, 205, 220, 0.5);
             text-align: center;
         }
         .upload-area input[type="file"] {
             display: block;
             margin: 12px auto;
             padding: 8px 16px;
-            border: 1px solid #D2C4B4;
+            border: 1px solid rgba(210, 196, 180, 0.5);
             border-radius: 8px;
-            background: #faf8f5;
+            background: rgba(255, 255, 255, 0.6);
             cursor: pointer;
             font-family: inherit;
         }
@@ -119,13 +177,16 @@
             margin-top: 12px;
             flex-wrap: wrap;
         }
+
         .config-bar {
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
             border-radius: 16px;
             padding: 20px 24px;
             margin-bottom: 20px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            border: 1px solid #D2C4B4;
+            border: 1px solid rgba(210, 196, 180, 0.3);
             display: flex;
             flex-wrap: wrap;
             align-items: flex-end;
@@ -143,15 +204,16 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.4px;
-            color: #5a6f7f;
+            color: #2c3e50;
         }
         .config-group select,
         .config-group input {
             padding: 6px 10px;
-            border: 1px solid #D2C4B4;
+            border: 1px solid rgba(210, 196, 180, 0.5);
             border-radius: 6px;
             font-size: 0.85rem;
-            background: #faf8f5;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(4px);
             font-family: inherit;
             outline: none;
             transition: border 0.2s;
@@ -166,25 +228,24 @@
             display: flex;
             gap: 6px;
         }
-        .config-group .date-row input {
-            flex: 1;
-        }
+        .config-group .date-row input { flex: 1; }
         .config-group .date-row .btn-sm {
             padding: 6px 12px;
             font-size: 0.7rem;
             white-space: nowrap;
-            background: #F3E3D0;
-            border: 1px solid #D2C4B4;
+            background: rgba(243, 227, 208, 0.7);
+            border: 1px solid rgba(210, 196, 180, 0.4);
             border-radius: 6px;
             cursor: pointer;
             font-weight: 600;
             font-family: inherit;
-            color: #2c3e50;
+            color: #1e2f3a;
             transition: background 0.15s;
         }
         .config-group .date-row .btn-sm:hover {
-            background: #e8d4be;
+            background: rgba(232, 212, 190, 0.8);
         }
+
         .btn {
             border: none;
             padding: 10px 24px;
@@ -196,9 +257,10 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: #AACDDC;
-            color: #2c3e50;
+            background: rgba(170, 205, 220, 0.7);
+            color: #1e2f3a;
             font-family: inherit;
+            backdrop-filter: blur(4px);
         }
         .btn:hover {
             background: #81A6C6;
@@ -206,42 +268,34 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
         }
         .btn-primary {
-            background: #81A6C6;
+            background: rgba(129, 166, 198, 0.85);
             color: #fff;
         }
-        .btn-primary:hover {
-            background: #6a8fb0;
-        }
+        .btn-primary:hover { background: #6a8fb0; }
         .btn-success {
-            background: #81A6C6;
+            background: rgba(129, 166, 198, 0.85);
             color: #fff;
         }
-        .btn-success:hover {
-            background: #6a8fb0;
-        }
+        .btn-success:hover { background: #6a8fb0; }
         .btn-outline {
-            background: transparent;
-            border: 1px solid #D2C4B4;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(210, 196, 180, 0.3);
         }
-        .btn-outline:hover {
-            background: #F3E3D0;
-        }
+        .btn-outline:hover { background: rgba(243, 227, 208, 0.5); }
         .btn-danger {
-            background: #c0392b;
+            background: rgba(192, 57, 43, 0.85);
             color: #fff;
         }
-        .btn-danger:hover {
-            background: #a93226;
-        }
-        .btn-sm {
-            padding: 6px 14px;
-            font-size: 0.75rem;
-        }
+        .btn-danger:hover { background: #a93226; }
+        .btn-sm { padding: 6px 14px; font-size: 0.75rem; }
+
         .table-wrapper {
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
             border-radius: 16px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            border: 1px solid #D2C4B4;
+            border: 1px solid rgba(210, 196, 180, 0.3);
             overflow: hidden;
             display: none;
         }
@@ -256,7 +310,7 @@
             min-width: 1400px;
         }
         thead {
-            background: #F3E3D0;
+            background: rgba(243, 227, 208, 0.6);
             position: sticky;
             top: 0;
             z-index: 5;
@@ -265,8 +319,8 @@
             padding: 14px 12px;
             text-align: left;
             font-weight: 600;
-            color: #2c3e50;
-            border-bottom: 2px solid #D2C4B4;
+            color: #1e2f3a;
+            border-bottom: 2px solid rgba(210, 196, 180, 0.3);
             white-space: nowrap;
             font-size: 0.7rem;
             text-transform: uppercase;
@@ -274,24 +328,20 @@
         }
         tbody tr {
             transition: background 0.15s;
-            border-bottom: 1px solid #eee8e0;
+            border-bottom: 1px solid rgba(238, 232, 224, 0.4);
         }
-        tbody tr:hover {
-            background: #faf8f5;
-        }
+        tbody tr:hover { background: rgba(255, 255, 255, 0.3); }
         tbody td {
             padding: 10px 12px;
             vertical-align: top;
             line-height: 1.5;
             word-break: break-word;
             max-width: 220px;
+            color: #1e2f3a;
         }
-        tbody td:first-child {
-            font-weight: 500;
-            color: #1a2a3a;
-        }
+        tbody td:first-child { font-weight: 500; color: #1a2a3a; }
         .cell-changed {
-            background: #F3E3D0 !important;
+            background: rgba(243, 227, 208, 0.6) !important;
             border-radius: 4px;
             padding: 2px 6px;
             margin: -2px -6px;
@@ -303,12 +353,14 @@
             font-size: 0.6rem;
             font-weight: 700;
         }
+
         .toolbar {
             display: flex;
             gap: 12px;
             padding: 16px 24px;
-            background: #faf8f5;
-            border-bottom: 1px solid #D2C4B4;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(4px);
+            border-bottom: 1px solid rgba(210, 196, 180, 0.2);
             flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
@@ -324,31 +376,34 @@
             gap: 10px;
             align-items: center;
         }
-        .search-box {
+
+        .search-box-input {
             padding: 6px 14px 6px 36px;
-            border: 1px solid #D2C4B4;
+            border: 1px solid rgba(210, 196, 180, 0.4);
             border-radius: 8px;
             font-size: 0.8rem;
-            background: #ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E") no-repeat 12px center;
+            background: rgba(255, 255, 255, 0.7) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E") no-repeat 12px center;
             background-size: 14px;
             outline: none;
             transition: border 0.2s;
             min-width: 200px;
             font-family: inherit;
         }
-        .search-box:focus {
+        .search-box-input:focus {
             border-color: #81A6C6;
             box-shadow: 0 0 0 3px rgba(129, 166, 198, 0.1);
         }
+
         .legend {
             display: flex;
             gap: 18px;
             flex-wrap: wrap;
             padding: 12px 24px;
-            background: #faf8f5;
-            border-top: 1px solid #D2C4B4;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+            border-top: 1px solid rgba(210, 196, 180, 0.2);
             font-size: 0.75rem;
-            color: #5a6f7f;
+            color: #2c3e50;
         }
         .legend-item {
             display: flex;
@@ -360,80 +415,40 @@
             width: 12px;
             height: 12px;
             border-radius: 4px;
-            background: #F3E3D0;
-            border: 1px solid #D2C4B4;
+            background: rgba(243, 227, 208, 0.7);
+            border: 1px solid rgba(210, 196, 180, 0.3);
         }
+
+        .highlight-row { background: rgba(254, 252, 232, 0.4) !important; }
+
         @media (max-width: 768px) {
-            body {
-                padding: 12px;
-            }
-            header {
-                padding: 16px 20px;
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            header h1 {
-                font-size: 1.2rem;
-            }
-            .config-bar {
-                flex-direction: column;
-                align-items: stretch;
-                padding: 16px;
-            }
-            .config-group {
-                flex: 1 1 auto;
-                min-width: 0;
-            }
-            .toolbar {
-                flex-direction: column;
-                align-items: stretch;
-                padding: 12px 16px;
-            }
-            .toolbar .left,
-            .toolbar .right {
-                flex-wrap: wrap;
-            }
-            .search-box {
-                min-width: 100%;
-            }
-            .legend {
-                flex-direction: column;
-                gap: 6px;
-                padding: 12px 16px;
-            }
-            table {
-                font-size: 0.7rem;
-                min-width: 1000px;
-            }
-            thead th,
-            tbody td {
-                padding: 6px 8px;
-            }
-            .upload-area {
-                padding: 16px;
-            }
+            body { padding: 12px; }
+            header { padding: 16px 20px; flex-direction: column; align-items: flex-start; }
+            header h1 { font-size: 1.2rem; }
+            .config-bar { flex-direction: column; align-items: stretch; padding: 16px; }
+            .config-group { flex: 1 1 auto; min-width: 0; }
+            .toolbar { flex-direction: column; align-items: stretch; padding: 12px 16px; }
+            .toolbar .left, .toolbar .right { flex-wrap: wrap; }
+            .search-box-input { min-width: 100%; }
+            .legend { flex-direction: column; gap: 6px; padding: 12px 16px; }
+            table { font-size: 0.7rem; min-width: 1000px; }
+            thead th, tbody td { padding: 6px 8px; }
+            .upload-area { padding: 16px; }
         }
-        .table-scroll::-webkit-scrollbar {
-            height: 8px;
-            width: 8px;
-        }
-        .table-scroll::-webkit-scrollbar-track {
-            background: #F3E3D0;
-            border-radius: 8px;
-        }
-        .table-scroll::-webkit-scrollbar-thumb {
-            background: #AACDDC;
-            border-radius: 8px;
-        }
-        .table-scroll::-webkit-scrollbar-thumb:hover {
-            background: #81A6C6;
-        }
-        .highlight-row {
-            background: #fefce8 !important;
-        }
+
+        .table-scroll::-webkit-scrollbar { height: 8px; width: 8px; }
+        .table-scroll::-webkit-scrollbar-track { background: rgba(243, 227, 208, 0.3); border-radius: 8px; }
+        .table-scroll::-webkit-scrollbar-thumb { background: rgba(170, 205, 220, 0.5); border-radius: 8px; }
+        .table-scroll::-webkit-scrollbar-thumb:hover { background: #81A6C6; }
     </style>
 </head>
 <body>
+
+    <!-- RAINBOW BACKGROUND -->
+    <div class="rainbow-bg" id="rainbowBg">
+        <div class="h"></div>
+        <div class="v"></div>
+    </div>
 
     <div class="container" id="app">
         <div class="back-row">
@@ -454,7 +469,7 @@
 
         <div class="upload-area" id="uploadArea">
             <h3 style="margin-bottom:8px;">Load your data</h3>
-            <p style="color:#5a6f7f; margin-bottom:12px;">Select an <strong>Excel (.xlsx / .xls)</strong> or CSV file.</p>
+            <p style="color:#2c3e50; margin-bottom:12px;">Select an <strong>Excel (.xlsx / .xls)</strong> or CSV file.</p>
             <input type="file" id="fileInput" accept=".xlsx,.xls,.csv,.tsv,.txt" />
             <div class="actions">
                 <button class="btn btn-primary" id="loadBtn">⟳ Load & Transform</button>
@@ -503,7 +518,7 @@
         <div class="table-wrapper" id="tableWrapper">
             <div class="toolbar">
                 <div class="left">
-                    <input type="text" class="search-box" id="searchInput" placeholder="Search any field…" />
+                    <input type="text" class="search-box-input" id="searchInput" placeholder="Search any field…" />
                     <button class="btn btn-outline" id="toggleChangesBtn">🔍 Show changes only</button>
                 </div>
                 <div class="right">
@@ -522,18 +537,18 @@
                     <span class="legend-swatch"></span> Highlighted cells have been transformed <span style="color:#81A6C6;">✦</span>
                 </span>
                 <span class="legend-item">
-                    <span style="background:#F3E3D0;padding:0 8px;border-radius:4px;font-weight:600;">PRIMARY ADDRESS</span> Original: "Primary"
+                    <span style="background:rgba(243,227,208,0.6);padding:0 8px;border-radius:4px;font-weight:600;">PRIMARY ADDRESS</span> Original: "Primary"
                 </span>
                 <span class="legend-item">
-                    <span style="background:#AACDDC;padding:0 8px;border-radius:4px;font-weight:600;">SECONDARY ADDRESS</span> Original: "Collateral"
+                    <span style="background:rgba(170,205,220,0.5);padding:0 8px;border-radius:4px;font-weight:600;">SECONDARY ADDRESS</span> Original: "Collateral"
                 </span>
                 <span class="legend-item">
                     <span style="background:#81A6C6;padding:0 8px;border-radius:4px;font-weight:600;color:#fff;">NCR</span> Original: "* District NCR"
                 </span>
-                <span class="legend-item" style="color:#5a6f7f;">
+                <span class="legend-item" style="color:#2c3e50;">
                     UNIQ = UID + ADDRESS TYPE (no separator)
                 </span>
-                <span class="legend-item" style="color:#5a6f7f;">
+                <span class="legend-item" style="color:#2c3e50;">
                     📄 Exported Excel: Calibri font · Size 9
                 </span>
             </div>
@@ -541,292 +556,211 @@
     </div>
 
     <script>
-        // ============================================================
-        // 1. COLUMN DEFINITIONS – Original input (expected order)
-        // ============================================================
-        const inputColumns = [
-            { key: 'uid', idx: 0 },
-            { key: 'account', idx: 1 },
-            { key: 'chName', idx: 2 },
-            { key: 'addrType', idx: 3 },
-            { key: 'address', idx: 4 },
-            { key: 'area', idx: 5 },
-            { key: 'municipality', idx: 6 },
-            { key: 'bank', idx: 7 },
-            { key: 'placement', idx: 8 },
-            { key: 'plate', idx: 9 },
-            { key: 'unitDesc', idx: 10 },
-            { key: 'chassis', idx: 11 },
-            { key: 'engine', idx: 12 },
-            { key: 'ob', idx: 13 },
-            { key: 'obWords', idx: 14 },
-            { key: 'amountDue', idx: 15 },
-            { key: 'amountDueWords', idx: 16 },
-            { key: 'endoDate', idx: 17 },
-            { key: 'cycle', idx: 18 },
-            { key: 'dueDate', idx: 19 },
-            { key: 'pulloutDate', idx: 20 },
-            { key: 'dlType', idx: 21 }
-        ];
-
-        // ============================================================
-        // 2. OUTPUT TEMPLATE COLUMNS (SUMMARY.xlsx)
-        // ============================================================
-        const templateColumns = [
-            { key: 'uniq', label: 'uniq' },
-            { key: 'account', label: 'ACCOUNT NUMBER' },
-            { key: 'bank', label: 'BANK' },
-            { key: 'placement', label: 'PLACEMENT' },
-            { key: 'chCode', label: 'CH CODE' },
-            { key: 'chName', label: 'CH NAME' },
-            { key: 'addType', label: 'ADD TYPE' },
-            { key: 'address', label: 'ADDRESS' },
-            { key: 'area', label: 'AREA' },
-            { key: 'municipality', label: 'MUNICIPALITY' },
-            { key: 'brgy', label: 'BRGY' },
-            { key: 'finalArea', label: 'FINAL AREA' },
-            { key: 'dlType', label: 'DL TYPE' },
-            { key: 'refCode', label: 'REFERENCE CODE' },
-            { key: 'autoDate', label: 'AUTOFIELD DATE' },
-            { key: 'obPrincipal', label: 'OB/PRINCIPAL' },
-            { key: 'amountDue', label: 'AMOUNT DUE' },
-            { key: 'endoDate', label: 'ENDO DATE' },
-            { key: 'accountType', label: 'ACCOUNT TYPE' },
-            { key: 'remarks', label: 'REMARKS' },
-            { key: 'poutDate', label: 'POUT DATE' }
-        ];
-
-        // ============================================================
-        // 3. TRANSFORMATION ENGINE
-        // ============================================================
-
-        function normalizeUpper(str) {
-            if (!str || str.trim() === '') return '';
-            return str
-                .toUpperCase()
-                .replace(/Ñ/g, 'N')
-                .replace(/ñ/g, 'N');
-        }
-
-        function transformRow(row) {
-            const result = [...row];
-            const changes = {};
-
-            const addrType = row[3] || '';
-            let newAddrType = addrType;
-            if (addrType === 'Primary') {
-                newAddrType = 'PRIMARY ADDRESS';
-                changes.addrType = { from: addrType, to: newAddrType };
-            } else if (addrType === 'Collateral') {
-                newAddrType = 'SECONDARY ADDRESS';
-                changes.addrType = { from: addrType, to: newAddrType };
+        // ── rainbow generator ──
+        (function() {
+            const container = document.getElementById('rainbowBg');
+            const length = 25;
+            const animationTime = 45;
+            const purple = 'rgb(232 121 249)';
+            const blue = 'rgb(96 165 250)';
+            const green = 'rgb(94 234 212)';
+            const perms = [
+                [purple, blue, green],
+                [purple, green, blue],
+                [green, purple, blue],
+                [green, blue, purple],
+                [blue, green, purple],
+                [blue, purple, green]
+            ];
+            for (let i = 1; i <= length; i++) {
+                const el = document.createElement('div');
+                el.className = 'rainbow';
+                const perm = perms[Math.floor(Math.random() * perms.length)];
+                const shadow =
+                    `-160px 0 100px 50px white, ` +
+                    `-80px 0 80px 40px ${perm[0]}, ` +
+                    `0 0 80px 40px ${perm[1]}, ` +
+                    `80px 0 80px 40px ${perm[2]}, ` +
+                    `160px 0 100px 50px white`;
+                el.style.boxShadow = shadow;
+                const duration = animationTime - (animationTime / length / 2) * i;
+                const delay = -(i / length) * animationTime;
+                el.style.animation = `${duration}s linear infinite slide`;
+                el.style.animationDelay = `${delay}s`;
+                container.insertBefore(el, container.querySelector('.h'));
             }
-            result[3] = newAddrType;
+        })();
 
-            let area = row[5] || '';
-            const areaOrig = area;
-            let areaNorm = normalizeUpper(area);
-            const ncrRegex = /^(FIRST|SECOND|THIRD|FOURTH)\s+DISTRICT\s+NCR$/;
-            if (ncrRegex.test(areaNorm)) {
-                areaNorm = 'NCR';
-            }
-            if (areaNorm !== areaOrig) {
-                changes.area = { from: areaOrig || '(empty)', to: areaNorm };
-            }
-            result[5] = areaNorm;
+        // ── summary tool logic ──
+        (function() {
+            const inputColumns = [
+                { key: 'uid', idx: 0 },
+                { key: 'account', idx: 1 },
+                { key: 'chName', idx: 2 },
+                { key: 'addrType', idx: 3 },
+                { key: 'address', idx: 4 },
+                { key: 'area', idx: 5 },
+                { key: 'municipality', idx: 6 },
+                { key: 'bank', idx: 7 },
+                { key: 'placement', idx: 8 },
+                { key: 'plate', idx: 9 },
+                { key: 'unitDesc', idx: 10 },
+                { key: 'chassis', idx: 11 },
+                { key: 'engine', idx: 12 },
+                { key: 'ob', idx: 13 },
+                { key: 'obWords', idx: 14 },
+                { key: 'amountDue', idx: 15 },
+                { key: 'amountDueWords', idx: 16 },
+                { key: 'endoDate', idx: 17 },
+                { key: 'cycle', idx: 18 },
+                { key: 'dueDate', idx: 19 },
+                { key: 'pulloutDate', idx: 20 },
+                { key: 'dlType', idx: 21 }
+            ];
 
-            let mun = row[6] || '';
-            const munOrig = mun;
-            let munNorm = normalizeUpper(mun);
-            if (munNorm !== 'QUEZON CITY') {
-                munNorm = munNorm.replace(/\s*CITY\s*$/, '').trim();
-            }
-            if (munNorm === '' && munOrig.trim() !== '') {
-                munNorm = normalizeUpper(munOrig);
-            }
-            if (munNorm !== munOrig) {
-                changes.municipality = { from: munOrig || '(empty)', to: munNorm };
-            }
-            result[6] = munNorm;
+            const templateColumns = [
+                { key: 'uniq', label: 'uniq' },
+                { key: 'account', label: 'ACCOUNT NUMBER' },
+                { key: 'bank', label: 'BANK' },
+                { key: 'placement', label: 'PLACEMENT' },
+                { key: 'chCode', label: 'CH CODE' },
+                { key: 'chName', label: 'CH NAME' },
+                { key: 'addType', label: 'ADD TYPE' },
+                { key: 'address', label: 'ADDRESS' },
+                { key: 'area', label: 'AREA' },
+                { key: 'municipality', label: 'MUNICIPALITY' },
+                { key: 'brgy', label: 'BRGY' },
+                { key: 'finalArea', label: 'FINAL AREA' },
+                { key: 'dlType', label: 'DL TYPE' },
+                { key: 'refCode', label: 'REFERENCE CODE' },
+                { key: 'autoDate', label: 'AUTOFIELD DATE' },
+                { key: 'obPrincipal', label: 'OB/PRINCIPAL' },
+                { key: 'amountDue', label: 'AMOUNT DUE' },
+                { key: 'endoDate', label: 'ENDO DATE' },
+                { key: 'accountType', label: 'ACCOUNT TYPE' },
+                { key: 'remarks', label: 'REMARKS' },
+                { key: 'poutDate', label: 'POUT DATE' }
+            ];
 
-            return { transformed: result, changes };
-        }
+            let processedData = [];
+            let totalChanges = 0;
+            let showChangesOnly = false;
+            let searchTerm = '';
 
-        // ============================================================
-        // 4. GET DEFAULTS FROM DROPDOWNS
-        // ============================================================
-
-        function getDefaults() {
-            const bank = document.getElementById('bankSelect').value;
-            const placement = document.getElementById('placementSelect').value;
-            const dlType = document.getElementById('dlTypeSelect').value;
-            const remarks = document.getElementById('remarksSelect').value;
-            let autoDate = document.getElementById('autoDateInput').value;
-            if (!autoDate) {
-                const today = new Date();
-                autoDate = today.toISOString().split('T')[0];
-                document.getElementById('autoDateInput').value = autoDate;
-            }
-            return { bank, placement, dlType, remarks, autoDate };
-        }
-
-        // ============================================================
-        // 5. MAPPING TO TEMPLATE (UNIQ = UID + ADDRESS TYPE, no separator)
-        // ============================================================
-
-        function mapToTemplate(transformedRow, changes, defaults) {
-            const out = {};
-            const get = (idx) => (idx < transformedRow.length ? transformedRow[idx] : '');
-
-            const uid = get(0);
-            const addrTypeTrans = get(3);
-
-            // UNIQ = UID + ADDRESS TYPE (no space, no dash)
-            out.uniq = uid + addrTypeTrans;
-            out.account = get(1);
-            out.bank = defaults.bank;
-            out.placement = defaults.placement;
-            out.chCode = uid;               // CH CODE is just UID
-            out.chName = get(2);
-            out.addType = addrTypeTrans;
-            out.address = get(4);
-            out.area = get(5);
-            out.municipality = get(6);
-            out.brgy = '';
-            out.finalArea = get(5);
-            out.dlType = defaults.dlType;
-            out.refCode = '';
-            out.autoDate = defaults.autoDate;
-            out.obPrincipal = get(13) || '';
-            out.amountDue = get(15) || '';
-            out.endoDate = get(17) || '';
-            out.accountType = '';
-            out.remarks = defaults.remarks;
-            out.poutDate = get(20) || '';
-
-            const templateChanges = {};
-            if (changes.addrType) {
-                templateChanges.addType = changes.addrType;
-            }
-            if (changes.area) {
-                templateChanges.area = changes.area;
-                templateChanges.finalArea = changes.area;
-            }
-            if (changes.municipality) {
-                templateChanges.municipality = changes.municipality;
+            function normalizeUpper(str) {
+                if (!str || str.trim() === '') return '';
+                return str
+                    .toUpperCase()
+                    .replace(/Ñ/g, 'N')
+                    .replace(/ñ/g, 'N');
             }
 
-            return { mapped: out, changes: templateChanges };
-        }
+            function transformRow(row) {
+                const result = [...row];
+                const changes = {};
 
-        // ============================================================
-        // 6. DATA PROCESSING
-        // ============================================================
+                const addrType = row[3] || '';
+                let newAddrType = addrType;
+                if (addrType === 'Primary') {
+                    newAddrType = 'PRIMARY ADDRESS';
+                    changes.addrType = { from: addrType, to: newAddrType };
+                } else if (addrType === 'Collateral') {
+                    newAddrType = 'SECONDARY ADDRESS';
+                    changes.addrType = { from: addrType, to: newAddrType };
+                }
+                result[3] = newAddrType;
 
-        let processedData = [];
-        let totalChanges = 0;
-        let showChangesOnly = false;
-        let searchTerm = '';
+                let area = row[5] || '';
+                const areaOrig = area;
+                let areaNorm = normalizeUpper(area);
+                const ncrRegex = /^(FIRST|SECOND|THIRD|FOURTH)\s+DISTRICT\s+NCR$/;
+                if (ncrRegex.test(areaNorm)) {
+                    areaNorm = 'NCR';
+                }
+                if (areaNorm !== areaOrig) {
+                    changes.area = { from: areaOrig || '(empty)', to: areaNorm };
+                }
+                result[5] = areaNorm;
 
-        function processRows(rows) {
-            const dataRows = rows.slice(1);
-            const defaults = getDefaults();
+                let mun = row[6] || '';
+                const munOrig = mun;
+                let munNorm = normalizeUpper(mun);
+                if (munNorm !== 'QUEZON CITY') {
+                    munNorm = munNorm.replace(/\s*CITY\s*$/, '').trim();
+                }
+                if (munNorm === '' && munOrig.trim() !== '') {
+                    munNorm = normalizeUpper(munOrig);
+                }
+                if (munNorm !== munOrig) {
+                    changes.municipality = { from: munOrig || '(empty)', to: munNorm };
+                }
+                result[6] = munNorm;
 
-            processedData = dataRows.map((row) => {
-                const { transformed, changes } = transformRow(row);
-                const { mapped, changes: mappedChanges } = mapToTemplate(transformed, changes, defaults);
-                const hasChanges = Object.keys(mappedChanges).length > 0;
-                return {
-                    mapped: mapped,
-                    changes: mappedChanges,
-                    hasChanges: hasChanges
-                };
-            });
-
-            totalChanges = 0;
-            processedData.forEach(p => {
-                totalChanges += Object.keys(p.changes).length;
-            });
-
-            document.getElementById('rowCount').textContent = processedData.length;
-            document.getElementById('changeCount').textContent = totalChanges;
-            document.getElementById('tableWrapper').style.display = 'block';
-            render();
-        }
-
-        // ============================================================
-        // 7. RENDER TABLE
-        // ============================================================
-
-        function render() {
-            const thead = document.getElementById('tableHead');
-            const tbody = document.getElementById('tableBody');
-
-            thead.innerHTML = `<tr>${templateColumns.map(c => `<th>${c.label}</th>`).join('')}</tr>`;
-
-            let data = processedData;
-            if (showChangesOnly) {
-                data = data.filter(d => d.hasChanges);
-            }
-            if (searchTerm.trim() !== '') {
-                const term = searchTerm.trim().toLowerCase();
-                data = data.filter(d => {
-                    return Object.values(d.mapped).some(val =>
-                        String(val).toLowerCase().includes(term)
-                    );
-                });
+                return { transformed: result, changes };
             }
 
-            if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="${templateColumns.length}" style="text-align:center;padding:40px;color:#7a8f9f;">
-                    No records match your filter.
-                </td></tr>`;
-                return;
+            function getDefaults() {
+                const bank = document.getElementById('bankSelect').value;
+                const placement = document.getElementById('placementSelect').value;
+                const dlType = document.getElementById('dlTypeSelect').value;
+                const remarks = document.getElementById('remarksSelect').value;
+                let autoDate = document.getElementById('autoDateInput').value;
+                if (!autoDate) {
+                    const today = new Date();
+                    autoDate = today.toISOString().split('T')[0];
+                    document.getElementById('autoDateInput').value = autoDate;
+                }
+                return { bank, placement, dlType, remarks, autoDate };
             }
 
-            let rowsHtml = '';
-            data.forEach((item) => {
-                const row = item.mapped;
-                const changes = item.changes;
-                const hasChanges = item.hasChanges;
-                const rowClass = hasChanges ? 'highlight-row' : '';
+            function mapToTemplate(transformedRow, changes, defaults) {
+                const out = {};
+                const get = (idx) => (idx < transformedRow.length ? transformedRow[idx] : '');
 
-                let cellsHtml = '';
-                templateColumns.forEach((col) => {
-                    const val = row[col.key] !== undefined ? row[col.key] : '';
-                    let displayVal = String(val);
-                    let isChanged = false;
+                const uid = get(0);
+                const addrTypeTrans = get(3);
 
-                    if (changes[col.key]) {
-                        isChanged = true;
-                    }
+                out.uniq = uid + addrTypeTrans;
+                out.account = get(1);
+                out.bank = defaults.bank;
+                out.placement = defaults.placement;
+                out.chCode = uid;
+                out.chName = get(2);
+                out.addType = addrTypeTrans;
+                out.address = get(4);
+                out.area = get(5);
+                out.municipality = get(6);
+                out.brgy = '';
+                out.finalArea = get(5);
+                out.dlType = defaults.dlType;
+                out.refCode = '';
+                out.autoDate = defaults.autoDate;
+                out.obPrincipal = get(13) || '';
+                out.amountDue = get(15) || '';
+                out.endoDate = get(17) || '';
+                out.accountType = '';
+                out.remarks = defaults.remarks;
+                out.poutDate = get(20) || '';
 
-                    const cellClass = isChanged ? 'cell-changed' : '';
-                    cellsHtml += `<td>${isChanged ? '<span class="' + cellClass + '">' : ''}${displayVal}${isChanged ? '</span>' : ''}</td>`;
-                });
+                const templateChanges = {};
+                if (changes.addrType) {
+                    templateChanges.addType = changes.addrType;
+                }
+                if (changes.area) {
+                    templateChanges.area = changes.area;
+                    templateChanges.finalArea = changes.area;
+                }
+                if (changes.municipality) {
+                    templateChanges.municipality = changes.municipality;
+                }
 
-                rowsHtml += `<tr class="${rowClass}">${cellsHtml}</tr>`;
-            });
-
-            tbody.innerHTML = rowsHtml;
-            document.getElementById('rowCount').textContent = data.length;
-            document.getElementById('changeCount').textContent = totalChanges;
-        }
-
-        // ============================================================
-        // 8. APPLY SETTINGS
-        // ============================================================
-
-        function applySettings() {
-            if (processedData.length === 0) {
-                alert('No data loaded. Please load a file first.');
-                return;
+                return { mapped: out, changes: templateChanges };
             }
 
-            const defaults = getDefaults();
-            if (window._rawRows) {
-                const rows = window._rawRows;
+            function processRows(rows) {
                 const dataRows = rows.slice(1);
+                const defaults = getDefaults();
+
                 processedData = dataRows.map((row) => {
                     const { transformed, changes } = transformRow(row);
                     const { mapped, changes: mappedChanges } = mapToTemplate(transformed, changes, defaults);
@@ -837,221 +771,298 @@
                         hasChanges: hasChanges
                     };
                 });
+
                 totalChanges = 0;
                 processedData.forEach(p => {
                     totalChanges += Object.keys(p.changes).length;
                 });
+
                 document.getElementById('rowCount').textContent = processedData.length;
                 document.getElementById('changeCount').textContent = totalChanges;
+                document.getElementById('tableWrapper').style.display = 'block';
                 render();
-            } else {
-                alert('No raw data available. Please reload the file.');
-            }
-        }
-
-        // ============================================================
-        // 9. UI CONTROLS
-        // ============================================================
-
-        function loadData() {
-            const fileInput = document.getElementById('fileInput');
-
-            if (fileInput.files.length === 0) {
-                alert('Please select an Excel (.xlsx / .xls) or CSV file.');
-                return;
             }
 
-            const file = fileInput.files[0];
-            const name = file.name.toLowerCase();
+            function render() {
+                const thead = document.getElementById('tableHead');
+                const tbody = document.getElementById('tableBody');
 
-            if (name.endsWith('.xlsx') || name.endsWith('.xls')) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    try {
-                        const data = new Uint8Array(e.target.result);
-                        const workbook = XLSX.read(data, { type: 'array' });
-                        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                        const rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
-                        if (rows.length < 2) {
-                            alert('Excel file must have at least a header row and one data row.');
-                            return;
+                thead.innerHTML = `<tr>${templateColumns.map(c => `<th>${c.label}</th>`).join('')}</tr>`;
+
+                let data = processedData;
+                if (showChangesOnly) {
+                    data = data.filter(d => d.hasChanges);
+                }
+                if (searchTerm.trim() !== '') {
+                    const term = searchTerm.trim().toLowerCase();
+                    data = data.filter(d => {
+                        return Object.values(d.mapped).some(val =>
+                            String(val).toLowerCase().includes(term)
+                        );
+                    });
+                }
+
+                if (data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="${templateColumns.length}" style="text-align:center;padding:40px;color:#3a4f5f;">
+                        No records match your filter.
+                    </td></tr>`;
+                    return;
+                }
+
+                let rowsHtml = '';
+                data.forEach((item) => {
+                    const row = item.mapped;
+                    const changes = item.changes;
+                    const hasChanges = item.hasChanges;
+                    const rowClass = hasChanges ? 'highlight-row' : '';
+
+                    let cellsHtml = '';
+                    templateColumns.forEach((col) => {
+                        const val = row[col.key] !== undefined ? row[col.key] : '';
+                        let displayVal = String(val);
+                        let isChanged = false;
+
+                        if (changes[col.key]) {
+                            isChanged = true;
                         }
-                        const filtered = rows.filter(row => row.some(cell => cell !== undefined && cell !== ''));
-                        window._rawRows = filtered;
-                        processRows(filtered);
-                    } catch (err) {
-                        alert('Error reading Excel file: ' + err.message);
-                    }
-                };
-                reader.readAsArrayBuffer(file);
-            } else {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const content = e.target.result;
-                    parseTextData(content);
-                };
-                reader.readAsText(file);
-            }
-        }
 
-        function parseTextData(text) {
-            let delimiter = ',';
-            if (text.includes('\t')) {
-                delimiter = '\t';
-            }
-            const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
-            if (lines.length < 2) {
-                alert('Data must have at least a header row and one data row.');
-                return;
-            }
-            const rows = lines.map(line => line.split(delimiter).map(cell => cell.trim()));
-            const maxCols = rows.reduce((max, row) => Math.max(max, row.length), 0);
-            const padded = rows.map(row => {
-                while (row.length < maxCols) row.push('');
-                return row;
-            });
-            window._rawRows = padded;
-            processRows(padded);
-        }
+                        const cellClass = isChanged ? 'cell-changed' : '';
+                        cellsHtml += `<td>${isChanged ? '<span class="' + cellClass + '">' : ''}${displayVal}${isChanged ? '</span>' : ''}</td>`;
+                    });
 
-        function resetAll() {
-            document.getElementById('fileInput').value = '';
-            document.getElementById('tableWrapper').style.display = 'none';
-            processedData = [];
-            totalChanges = 0;
-            showChangesOnly = false;
-            searchTerm = '';
-            window._rawRows = null;
-            document.getElementById('searchInput').value = '';
-            document.getElementById('toggleChangesBtn').textContent = '🔍 Show changes only';
-            document.getElementById('rowCount').textContent = '0';
-            document.getElementById('changeCount').textContent = '0';
-        }
-
-        document.getElementById('todayBtn').addEventListener('click', function() {
-            const today = new Date();
-            const dateStr = today.toISOString().split('T')[0];
-            document.getElementById('autoDateInput').value = dateStr;
-        });
-
-        (function setDefaultDate() {
-            const today = new Date();
-            const dateStr = today.toISOString().split('T')[0];
-            document.getElementById('autoDateInput').value = dateStr;
-        })();
-
-        document.getElementById('loadBtn').addEventListener('click', loadData);
-        document.getElementById('resetBtn').addEventListener('click', resetAll);
-        document.getElementById('applySettingsBtn').addEventListener('click', applySettings);
-
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            searchTerm = e.target.value;
-            render();
-        });
-
-        document.getElementById('toggleChangesBtn').addEventListener('click', () => {
-            showChangesOnly = !showChangesOnly;
-            document.getElementById('toggleChangesBtn').textContent =
-                showChangesOnly ? '🔍 Show all rows' : '🔍 Show changes only';
-            render();
-        });
-
-        // ============================================================
-        // EXPORT AS EXCEL (.xlsx) – Calibri font size 9
-        // ============================================================
-        document.getElementById('exportBtn').addEventListener('click', () => {
-            if (processedData.length === 0) {
-                alert('No data to export.');
-                return;
-            }
-
-            let data = processedData;
-            if (showChangesOnly) data = data.filter(d => d.hasChanges);
-            if (searchTerm.trim() !== '') {
-                const term = searchTerm.trim().toLowerCase();
-                data = data.filter(d => {
-                    return Object.values(d.mapped).some(val =>
-                        String(val).toLowerCase().includes(term)
-                    );
+                    rowsHtml += `<tr class="${rowClass}">${cellsHtml}</tr>`;
                 });
+
+                tbody.innerHTML = rowsHtml;
+                document.getElementById('rowCount').textContent = data.length;
+                document.getElementById('changeCount').textContent = totalChanges;
             }
 
-            if (data.length === 0) {
-                alert('No data to export.');
-                return;
-            }
+            function applySettings() {
+                if (processedData.length === 0) {
+                    alert('No data loaded. Please load a file first.');
+                    return;
+                }
 
-            let autoDate = document.getElementById('autoDateInput').value;
-            if (!autoDate) {
-                const today = new Date();
-                autoDate = today.toISOString().split('T')[0];
-            }
-            const dateParts = autoDate.split('-');
-            const dateFormatted = `${dateParts[1]}-${dateParts[2]}-${dateParts[0]}`;
-
-            const bank = document.getElementById('bankSelect').value || 'NO_BANK';
-            const remarks = document.getElementById('remarksSelect').value || 'NO_REMARKS';
-            const clean = (str) => str.replace(/[^a-zA-Z0-9\-_\s]/g, '').trim();
-            const fileName = `SUMMARY ${clean(bank)} ${clean(remarks)} ${dateFormatted}.xlsx`;
-
-            const header = templateColumns.map(c => c.label);
-            const rows = data.map(item => {
-                return templateColumns.map(c => {
-                    let val = item.mapped[c.key] !== undefined ? item.mapped[c.key] : '';
-                    if (c.key === 'autoDate' && val) {
-                        const parts = String(val).split('-');
-                        if (parts.length === 3) {
-                            val = `${parts[1]}-${parts[2]}-${parts[0]}`;
-                        }
-                    }
-                    return val;
-                });
-            });
-
-            const wsData = [header, ...rows];
-            const ws = XLSX.utils.aoa_to_sheet(wsData);
-
-            const range = XLSX.utils.decode_range(ws['!ref']);
-            for (let R = range.s.r; R <= range.e.r; R++) {
-                for (let C = range.s.c; C <= range.e.c; C++) {
-                    const addr = XLSX.utils.encode_cell({ r: R, c: C });
-                    if (!ws[addr]) continue;
-                    if (!ws[addr].s) ws[addr].s = {};
-                    ws[addr].s.font = { name: 'Calibri', sz: 9 };
+                const defaults = getDefaults();
+                if (window._rawRows) {
+                    const rows = window._rawRows;
+                    const dataRows = rows.slice(1);
+                    processedData = dataRows.map((row) => {
+                        const { transformed, changes } = transformRow(row);
+                        const { mapped, changes: mappedChanges } = mapToTemplate(transformed, changes, defaults);
+                        const hasChanges = Object.keys(mappedChanges).length > 0;
+                        return {
+                            mapped: mapped,
+                            changes: mappedChanges,
+                            hasChanges: hasChanges
+                        };
+                    });
+                    totalChanges = 0;
+                    processedData.forEach(p => {
+                        totalChanges += Object.keys(p.changes).length;
+                    });
+                    document.getElementById('rowCount').textContent = processedData.length;
+                    document.getElementById('changeCount').textContent = totalChanges;
+                    render();
+                } else {
+                    alert('No raw data available. Please reload the file.');
                 }
             }
 
-            ws['!cols'] = templateColumns.map(c => ({ wch: Math.max(c.label.length * 1.2, 12) }));
+            function loadData() {
+                const fileInput = document.getElementById('fileInput');
 
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'SUMMARY');
+                if (fileInput.files.length === 0) {
+                    alert('Please select an Excel (.xlsx / .xls) or CSV file.');
+                    return;
+                }
 
-            const wbout = XLSX.write(wb, {
-                bookType: 'xlsx',
-                type: 'array',
-                cellStyles: true
+                const file = fileInput.files[0];
+                const name = file.name.toLowerCase();
+
+                if (name.endsWith('.xlsx') || name.endsWith('.xls')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const data = new Uint8Array(e.target.result);
+                            const workbook = XLSX.read(data, { type: 'array' });
+                            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                            const rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+                            if (rows.length < 2) {
+                                alert('Excel file must have at least a header row and one data row.');
+                                return;
+                            }
+                            const filtered = rows.filter(row => row.some(cell => cell !== undefined && cell !== ''));
+                            window._rawRows = filtered;
+                            processRows(filtered);
+                        } catch (err) {
+                            alert('Error reading Excel file: ' + err.message);
+                        }
+                    };
+                    reader.readAsArrayBuffer(file);
+                } else {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const content = e.target.result;
+                        parseTextData(content);
+                    };
+                    reader.readAsText(file);
+                }
+            }
+
+            function parseTextData(text) {
+                let delimiter = ',';
+                if (text.includes('\t')) {
+                    delimiter = '\t';
+                }
+                const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
+                if (lines.length < 2) {
+                    alert('Data must have at least a header row and one data row.');
+                    return;
+                }
+                const rows = lines.map(line => line.split(delimiter).map(cell => cell.trim()));
+                const maxCols = rows.reduce((max, row) => Math.max(max, row.length), 0);
+                const padded = rows.map(row => {
+                    while (row.length < maxCols) row.push('');
+                    return row;
+                });
+                window._rawRows = padded;
+                processRows(padded);
+            }
+
+            function resetAll() {
+                document.getElementById('fileInput').value = '';
+                document.getElementById('tableWrapper').style.display = 'none';
+                processedData = [];
+                totalChanges = 0;
+                showChangesOnly = false;
+                searchTerm = '';
+                window._rawRows = null;
+                document.getElementById('searchInput').value = '';
+                document.getElementById('toggleChangesBtn').textContent = '🔍 Show changes only';
+                document.getElementById('rowCount').textContent = '0';
+                document.getElementById('changeCount').textContent = '0';
+            }
+
+            document.getElementById('todayBtn').addEventListener('click', function() {
+                const today = new Date();
+                const dateStr = today.toISOString().split('T')[0];
+                document.getElementById('autoDateInput').value = dateStr;
             });
 
-            const blob = new Blob([wbout], { type: 'application/octet-stream' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = fileName;
-            link.click();
-            URL.revokeObjectURL(link.href);
-        });
+            (function setDefaultDate() {
+                const today = new Date();
+                const dateStr = today.toISOString().split('T')[0];
+                document.getElementById('autoDateInput').value = dateStr;
+            })();
 
-        // ============================================================
-        // 10. INIT
-        // ============================================================
-        document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('en-PH', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        });
+            document.getElementById('loadBtn').addEventListener('click', loadData);
+            document.getElementById('resetBtn').addEventListener('click', resetAll);
+            document.getElementById('applySettingsBtn').addEventListener('click', applySettings);
 
-        document.getElementById('tableWrapper').style.display = 'none';
-        window._rawRows = null;
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                searchTerm = e.target.value;
+                render();
+            });
+
+            document.getElementById('toggleChangesBtn').addEventListener('click', () => {
+                showChangesOnly = !showChangesOnly;
+                document.getElementById('toggleChangesBtn').textContent =
+                    showChangesOnly ? '🔍 Show all rows' : '🔍 Show changes only';
+                render();
+            });
+
+            document.getElementById('exportBtn').addEventListener('click', () => {
+                if (processedData.length === 0) {
+                    alert('No data to export.');
+                    return;
+                }
+
+                let data = processedData;
+                if (showChangesOnly) data = data.filter(d => d.hasChanges);
+                if (searchTerm.trim() !== '') {
+                    const term = searchTerm.trim().toLowerCase();
+                    data = data.filter(d => {
+                        return Object.values(d.mapped).some(val =>
+                            String(val).toLowerCase().includes(term)
+                        );
+                    });
+                }
+
+                if (data.length === 0) {
+                    alert('No data to export.');
+                    return;
+                }
+
+                let autoDate = document.getElementById('autoDateInput').value;
+                if (!autoDate) {
+                    const today = new Date();
+                    autoDate = today.toISOString().split('T')[0];
+                }
+                const dateParts = autoDate.split('-');
+                const dateFormatted = `${dateParts[1]}-${dateParts[2]}-${dateParts[0]}`;
+
+                const bank = document.getElementById('bankSelect').value || 'NO_BANK';
+                const remarks = document.getElementById('remarksSelect').value || 'NO_REMARKS';
+                const clean = (str) => str.replace(/[^a-zA-Z0-9\-_\s]/g, '').trim();
+                const fileName = `SUMMARY ${clean(bank)} ${clean(remarks)} ${dateFormatted}.xlsx`;
+
+                const header = templateColumns.map(c => c.label);
+                const rows = data.map(item => {
+                    return templateColumns.map(c => {
+                        let val = item.mapped[c.key] !== undefined ? item.mapped[c.key] : '';
+                        if (c.key === 'autoDate' && val) {
+                            const parts = String(val).split('-');
+                            if (parts.length === 3) {
+                                val = `${parts[1]}-${parts[2]}-${parts[0]}`;
+                            }
+                        }
+                        return val;
+                    });
+                });
+
+                const wsData = [header, ...rows];
+                const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+                const range = XLSX.utils.decode_range(ws['!ref']);
+                for (let R = range.s.r; R <= range.e.r; R++) {
+                    for (let C = range.s.c; C <= range.e.c; C++) {
+                        const addr = XLSX.utils.encode_cell({ r: R, c: C });
+                        if (!ws[addr]) continue;
+                        if (!ws[addr].s) ws[addr].s = {};
+                        ws[addr].s.font = { name: 'Calibri', sz: 9 };
+                    }
+                }
+
+                ws['!cols'] = templateColumns.map(c => ({ wch: Math.max(c.label.length * 1.2, 12) }));
+
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'SUMMARY');
+
+                const wbout = XLSX.write(wb, {
+                    bookType: 'xlsx',
+                    type: 'array',
+                    cellStyles: true
+                });
+
+                const blob = new Blob([wbout], { type: 'application/octet-stream' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = fileName;
+                link.click();
+                URL.revokeObjectURL(link.href);
+            });
+
+            document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('en-PH', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+
+            document.getElementById('tableWrapper').style.display = 'none';
+            window._rawRows = null;
+        })();
     </script>
-
 </body>
 </html>
