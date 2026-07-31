@@ -6,6 +6,7 @@
     <title>Jomayo</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>" />
     <style>
+        /* ── reset ── */
         * {
             margin: 0;
             padding: 0;
@@ -14,27 +15,83 @@
 
         body {
             font-family: -apple-system, "SF Pro", "Segoe UI", Roboto, sans-serif;
-            background: #F3E3D0;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 2rem 1.5rem;
+            background: #f0ebe5;
+            overflow: hidden;
+            position: relative;
         }
 
+        /* ── rainbow background layer ── */
+        .rainbow-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+            background: #f0ebe5;
+        }
+
+        .rainbow {
+            height: 100vh;
+            width: 0;
+            top: 0;
+            position: absolute;
+            transform: rotate(10deg);
+            transform-origin: top right;
+            will-change: right;
+        }
+
+        .h {
+            box-shadow: 0 0 50vh 40vh rgba(255, 255, 255, 0.85);
+            width: 100vw;
+            height: 0;
+            bottom: 0;
+            left: 0;
+            position: absolute;
+            pointer-events: none;
+        }
+        .v {
+            box-shadow: 0 0 35vw 25vw rgba(255, 255, 255, 0.80);
+            width: 0;
+            height: 100vh;
+            bottom: 0;
+            left: 0;
+            position: absolute;
+            pointer-events: none;
+        }
+
+        @keyframes slide {
+            from {
+                right: -25vw;
+            }
+            to {
+                right: 125vw;
+            }
+        }
+
+        /* ── dashboard card ── */
         .dashboard {
+            position: relative;
+            z-index: 1;
             max-width: 1100px;
             width: 100%;
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             border-radius: 32px;
             padding: 2.5rem 3rem;
-            box-shadow: 0 20px 60px rgba(129, 166, 198, 0.15);
-            border: 1px solid #D2C4B4;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: background 0.3s;
         }
 
         .header {
             margin-bottom: 2.5rem;
-            border-bottom: 2px solid #AACDDC;
+            border-bottom: 2px solid rgba(170, 205, 220, 0.5);
             padding-bottom: 1.5rem;
         }
 
@@ -67,11 +124,13 @@
         }
 
         .card {
-            background: #faf8f5;
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
             border-radius: 18px;
             padding: 1.8rem 1.5rem 1.5rem;
-            border: 1px solid #D2C4B4;
-            transition: all 0.2s ease;
+            border: 1px solid rgba(210, 196, 180, 0.4);
+            transition: all 0.25s ease;
             text-decoration: none;
             color: inherit;
             display: flex;
@@ -80,9 +139,9 @@
 
         .card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 12px 32px rgba(129, 166, 198, 0.15);
-            border-color: #81A6C6;
-            background: #ffffff;
+            box-shadow: 0 12px 32px rgba(129, 166, 198, 0.20);
+            border-color: rgba(129, 166, 198, 0.7);
+            background: rgba(255, 255, 255, 0.8);
         }
 
         .card .icon {
@@ -110,7 +169,7 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             color: #3a4f5f;
-            background: #F3E3D0;
+            background: rgba(243, 227, 208, 0.7);
             padding: 0.2rem 0.8rem;
             border-radius: 20px;
             align-self: flex-start;
@@ -120,7 +179,7 @@
         .footer {
             margin-top: 2.5rem;
             padding-top: 1.5rem;
-            border-top: 1px solid #D2C4B4;
+            border-top: 1px solid rgba(210, 196, 180, 0.4);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -142,6 +201,8 @@
         @media (max-width: 600px) {
             .dashboard {
                 padding: 1.5rem;
+                backdrop-filter: blur(18px);
+                -webkit-backdrop-filter: blur(18px);
             }
             .header h1 {
                 font-size: 1.4rem;
@@ -155,6 +216,14 @@
 </head>
 <body>
 
+    <!-- ═══ RAINBOW BACKGROUND ═══ -->
+    <div class="rainbow-bg" id="rainbowBg">
+        <!-- 25 .rainbow divs will be injected by JS -->
+        <div class="h"></div>
+        <div class="v"></div>
+    </div>
+
+    <!-- ═══ DASHBOARD ═══ -->
     <div class="dashboard">
         <div class="header">
             <h1>
@@ -204,6 +273,62 @@
             </span>
         </div>
     </div>
+
+    <script>
+        (function() {
+            const container = document.getElementById('rainbowBg');
+            const length = 25;
+            const animationTime = 45;
+
+            // Color palettes (matching SCSS)
+            const purple = 'rgb(232 121 249)';
+            const blue = 'rgb(96 165 250)';
+            const green = 'rgb(94 234 212)';
+
+            // All 6 permutations
+            const perms = [
+                [purple, blue, green],
+                [purple, green, blue],
+                [green, purple, blue],
+                [green, blue, purple],
+                [blue, green, purple],
+                [blue, purple, green]
+            ];
+
+            // Pre‑seed random so it's consistent on reload (optional)
+            // We'll just use Math.random() – each load gives a fresh random layout.
+
+            for (let i = 1; i <= length; i++) {
+                const el = document.createElement('div');
+                el.className = 'rainbow';
+
+                // pick random permutation
+                const perm = perms[Math.floor(Math.random() * perms.length)];
+
+                // box-shadow: white, color1, color2, color3, white
+                const shadow =
+                    `-130px 0 80px 40px white, ` +
+                    `-50px 0 50px 25px ${perm[0]}, ` +
+                    `0 0 50px 25px ${perm[1]}, ` +
+                    `50px 0 50px 25px ${perm[2]}, ` +
+                    `130px 0 80px 40px white`;
+
+                el.style.boxShadow = shadow;
+
+                // duration: 45s - 45/25/2 * i  =  45 - 0.9*i
+                const duration = animationTime - (animationTime / length / 2) * i;
+                // delay: -i / length * 45s
+                const delay = -(i / length) * animationTime;
+
+                el.style.animation =
+                    `${duration}s linear infinite slide`;
+                el.style.animationDelay = `${delay}s`;
+
+                // insert before .h (which is the last child)
+                container.insertBefore(el, container.querySelector('.h'));
+            }
+        })();
+    </script>
 
 </body>
 </html>
