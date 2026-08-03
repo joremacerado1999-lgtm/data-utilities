@@ -14,7 +14,6 @@
             padding: 0;
         }
 
-        /* ── rainbow background layer ── */
         .rainbow-bg {
             position: fixed;
             inset: 0;
@@ -593,32 +592,8 @@
 
         // ── summary tool logic ──
         (function() {
-            const inputColumns = [
-                { key: 'uid', idx: 0 },
-                { key: 'account', idx: 1 },
-                { key: 'chName', idx: 2 },
-                { key: 'addrType', idx: 3 },
-                { key: 'address', idx: 4 },
-                { key: 'area', idx: 5 },
-                { key: 'municipality', idx: 6 },
-                { key: 'bank', idx: 7 },
-                { key: 'placement', idx: 8 },
-                { key: 'plate', idx: 9 },
-                { key: 'unitDesc', idx: 10 },
-                { key: 'chassis', idx: 11 },
-                { key: 'engine', idx: 12 },
-                { key: 'ob', idx: 13 },
-                { key: 'obWords', idx: 14 },
-                { key: 'amountDue', idx: 15 },
-                { key: 'amountDueWords', idx: 16 },
-                { key: 'endoDate', idx: 17 },
-                { key: 'cycle', idx: 18 },
-                { key: 'dueDate', idx: 19 },
-                { key: 'pulloutDate', idx: 20 },
-                { key: 'dlType', idx: 21 }
-            ];
-
-            const templateColumns = [
+            // -------- Output column definitions --------
+            const baseOutputColumns = [
                 { key: 'uniq', label: 'uniq' },
                 { key: 'account', label: 'ACCOUNT NUMBER' },
                 { key: 'bank', label: 'BANK' },
@@ -630,7 +605,7 @@
                 { key: 'area', label: 'AREA' },
                 { key: 'municipality', label: 'MUNICIPALITY' },
                 { key: 'brgy', label: 'BRGY' },
-                { key: 'finalArea', label: 'FINAL AREA' },
+                { key: 'finalArea', label: 'FINAL AREA' }, // always empty
                 { key: 'dlType', label: 'DL TYPE' },
                 { key: 'refCode', label: 'REFERENCE CODE' },
                 { key: 'autoDate', label: 'AUTOFIELD DATE' },
@@ -642,11 +617,56 @@
                 { key: 'poutDate', label: 'POUT DATE' }
             ];
 
-            let processedData = [];
-            let totalChanges = 0;
-            let showChangesOnly = false;
-            let searchTerm = '';
+            const cbsExtraColumns = [
+                { key: 'agentCode', label: 'AGENT CODE' },
+                { key: 'agentName', label: 'AGENT NAME' }
+            ];
 
+            // -------- Input field detection patterns --------
+            const fieldPatterns = {
+                account: ['account number', 'account', 'acct#', 'acct'],
+                chName: ['ch name', 'name', 'customer name', 'borrower'],
+                addrType: ['addr type', 'address type', 'add type'],
+                address: ['address'],
+                area: ['area'],
+                municipality: ['municipality', 'mun', 'city', 'municipality/city'],
+                pulloutDate: ['pullout date', 'pout date', 'pull out date', 'pull-out date'],
+                ob: ['ob', 'outstanding balance', 'principal', 'ob/principal'],
+                amountDue: ['amount due', 'due amount'],
+                endoDate: ['endo date', 'endorsement date'],
+                agentCode: ['agent code', 'agent #', 'agent no'],
+                agentName: ['agent name', 'agent']
+            };
+
+            // -------- Helper: normalize header string --------
+            function normalizeHeader(str) {
+                return str.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+            }
+
+            // -------- Detect column indices from header row --------
+            function detectColumns(headers) {
+                const indices = {};
+                const normalizedHeaders = headers.map(h => normalizeHeader(h));
+
+                for (const [field, patterns] of Object.entries(fieldPatterns)) {
+                    for (const pattern of patterns) {
+                        const normPattern = normalizeHeader(pattern);
+                        const idx = normalizedHeaders.findIndex(h => h === normPattern);
+                        if (idx !== -1) {
+                            indices[field] = idx;
+                            break;
+                        }
+                    }
+                }
+
+                // UID: assume first column (0) unless we find 'uid' or 'ch code'
+                const uidIdx = normalizedHeaders.findIndex(h => h === 'uid' || h === 'chcode' || h === 'reference');
+                indices.uid = uidIdx !== -1 ? uidIdx : 0;
+
+                return indices;
+            }
+
+            // -------- Transformations --------
             function normalizeUpper(str) {
                 if (!str || str.trim() === '') return '';
                 return str
@@ -655,50 +675,50 @@
                     .replace(/ñ/g, 'N');
             }
 
-            function transformRow(row) {
-                const result = [...row];
-                const changes = {};
-
-                const addrType = row[3] || '';
-                let newAddrType = addrType;
-                if (addrType === 'Primary') {
-                    newAddrType = 'PRIMARY ADDRESS';
-                    changes.addrType = { from: addrType, to: newAddrType };
-                } else if (addrType === 'Collateral') {
-                    newAddrType = 'SECONDARY ADDRESS';
-                    changes.addrType = { from: addrType, to: newAddrType };
-                }
-                result[3] = newAddrType;
-
-                let area = row[5] || '';
-                const areaOrig = area;
-                let areaNorm = normalizeUpper(area);
-                const ncrRegex = /^(FIRST|SECOND|THIRD|FOURTH)\s+DISTRICT\s+NCR$/;
-                if (ncrRegex.test(areaNorm)) {
-                    areaNorm = 'NCR';
-                }
-                if (areaNorm !== areaOrig) {
-                    changes.area = { from: areaOrig || '(empty)', to: areaNorm };
-                }
-                result[5] = areaNorm;
-
-                let mun = row[6] || '';
-                const munOrig = mun;
-                let munNorm = normalizeUpper(mun);
-                if (munNorm !== 'QUEZON CITY') {
-                    munNorm = munNorm.replace(/\s*CITY\s*$/, '').trim();
-                }
-                if (munNorm === '' && munOrig.trim() !== '') {
-                    munNorm = normalizeUpper(munOrig);
-                }
-                if (munNorm !== munOrig) {
-                    changes.municipality = { from: munOrig || '(empty)', to: munNorm };
-                }
-                result[6] = munNorm;
-
-                return { transformed: result, changes };
+            function transformAddrType(val) {
+                if (val === 'Primary') return 'PRIMARY ADDRESS';
+                if (val === 'Collateral') return 'SECONDARY ADDRESS';
+                return val;
             }
 
+            function transformArea(val) {
+                if (!val) return '';
+                const norm = normalizeUpper(val);
+                const ncrRegex = /^(FIRST|SECOND|THIRD|FOURTH)\s+DISTRICT\s+NCR$/;
+                if (ncrRegex.test(norm)) {
+                    return 'NCR';
+                }
+                return norm;
+            }
+
+            function transformMunicipality(val) {
+                if (!val) return '';
+                let norm = normalizeUpper(val);
+                if (norm !== 'QUEZON CITY') {
+                    norm = norm.replace(/\s*CITY\s*$/, '').trim();
+                }
+                return norm;
+            }
+
+            // -------- Main state --------
+            let processedData = []; // array of { mapped: {...}, changes: {...}, hasChanges: bool }
+            let totalChanges = 0;
+            let showChangesOnly = false;
+            let searchTerm = '';
+            let rawRows = null; // array of arrays
+            let headerRow = null;
+            let columnIndices = {}; // mapping field -> index
+
+            // -------- Get output columns based on current bank --------
+            function getOutputColumns() {
+                const bank = document.getElementById('bankSelect').value;
+                if (bank === 'CBS HOUSING LOAN') {
+                    return [...baseOutputColumns, ...cbsExtraColumns];
+                }
+                return baseOutputColumns;
+            }
+
+            // -------- Apply settings and re-process --------
             function getDefaults() {
                 const bank = document.getElementById('bankSelect').value;
                 const placement = document.getElementById('placementSelect').value;
@@ -713,63 +733,94 @@
                 return { bank, placement, dlType, remarks, autoDate };
             }
 
-            function mapToTemplate(transformedRow, changes, defaults) {
-                const out = {};
-                const get = (idx) => (idx < transformedRow.length ? transformedRow[idx] : '');
-
-                const uid = get(0);
-                const addrTypeTrans = get(3);
-
-                out.uniq = uid + addrTypeTrans;
-                out.account = get(1);
-                out.bank = defaults.bank;
-                out.placement = defaults.placement;
-                out.chCode = uid;
-                out.chName = get(2);
-                out.addType = addrTypeTrans;
-                out.address = get(4);
-                out.area = get(5);
-                out.municipality = get(6);
-                out.brgy = '';
-                out.finalArea = get(5);
-                out.dlType = defaults.dlType;
-                out.refCode = '';
-                out.autoDate = defaults.autoDate;
-                out.obPrincipal = get(13) || '';
-                out.amountDue = get(15) || '';
-                out.endoDate = get(17) || '';
-                out.accountType = '';
-                out.remarks = defaults.remarks;
-                out.poutDate = get(20) || '';
-
-                const templateChanges = {};
-                if (changes.addrType) {
-                    templateChanges.addType = changes.addrType;
-                }
-                if (changes.area) {
-                    templateChanges.area = changes.area;
-                    templateChanges.finalArea = changes.area;
-                }
-                if (changes.municipality) {
-                    templateChanges.municipality = changes.municipality;
+            function processRows() {
+                if (!rawRows || rawRows.length < 2) {
+                    alert('No data loaded.');
+                    return;
                 }
 
-                return { mapped: out, changes: templateChanges };
-            }
+                headerRow = rawRows[0];
+                const dataRows = rawRows.slice(1).filter(row => row.some(cell => cell !== undefined && cell !== ''));
+                if (dataRows.length === 0) {
+                    alert('No data rows found.');
+                    return;
+                }
 
-            function processRows(rows) {
-                const dataRows = rows.slice(1);
+                columnIndices = detectColumns(headerRow);
                 const defaults = getDefaults();
 
                 processedData = dataRows.map((row) => {
-                    const { transformed, changes } = transformRow(row);
-                    const { mapped, changes: mappedChanges } = mapToTemplate(transformed, changes, defaults);
-                    const hasChanges = Object.keys(mappedChanges).length > 0;
-                    return {
-                        mapped: mapped,
-                        changes: mappedChanges,
-                        hasChanges: hasChanges
+                    const get = (field) => {
+                        const idx = columnIndices[field];
+                        if (idx !== undefined && idx < row.length) {
+                            return row[idx] !== undefined ? String(row[idx]).trim() : '';
+                        }
+                        return '';
                     };
+
+                    // Extract raw values
+                    const uid = get('uid') || row[0] || '';
+                    const account = get('account');
+                    const chName = get('chName');
+                    const addrTypeRaw = get('addrType');
+                    const address = get('address');
+                    const areaRaw = get('area');
+                    const municipalityRaw = get('municipality');
+                    const pulloutDate = get('pulloutDate');
+                    const ob = get('ob');
+                    const amountDue = get('amountDue');
+                    const endoDate = get('endoDate');
+                    const agentCode = get('agentCode');
+                    const agentName = get('agentName');
+
+                    // Apply transformations
+                    const newAddrType = transformAddrType(addrTypeRaw);
+                    const newArea = transformArea(areaRaw);
+                    const newMunicipality = transformMunicipality(municipalityRaw);
+
+                    // Track changes
+                    const changes = {};
+                    if (newAddrType !== addrTypeRaw && addrTypeRaw !== '') {
+                        changes.addType = { from: addrTypeRaw, to: newAddrType };
+                    }
+                    if (newArea !== areaRaw && areaRaw !== '') {
+                        changes.area = { from: areaRaw, to: newArea };
+                    }
+                    if (newMunicipality !== municipalityRaw && municipalityRaw !== '') {
+                        changes.municipality = { from: municipalityRaw, to: newMunicipality };
+                    }
+
+                    // Build mapped output
+                    const mapped = {
+                        uniq: uid + newAddrType,
+                        account: account,
+                        bank: defaults.bank,
+                        placement: defaults.placement,
+                        chCode: uid,
+                        chName: chName,
+                        addType: newAddrType,
+                        address: address,
+                        area: newArea,
+                        municipality: newMunicipality,
+                        brgy: '',
+                        finalArea: '', // always empty
+                        dlType: defaults.dlType,
+                        refCode: '',
+                        autoDate: defaults.autoDate,
+                        obPrincipal: ob || '',
+                        amountDue: amountDue || '',
+                        endoDate: endoDate || '',
+                        accountType: '',
+                        remarks: defaults.remarks,
+                        poutDate: pulloutDate || ''
+                    };
+
+                    // Add agent fields if present (they will be ignored if not CBS)
+                    if (agentCode !== undefined) mapped.agentCode = agentCode;
+                    if (agentName !== undefined) mapped.agentName = agentName;
+
+                    const hasChanges = Object.keys(changes).length > 0;
+                    return { mapped, changes, hasChanges };
                 });
 
                 totalChanges = 0;
@@ -783,11 +834,13 @@
                 render();
             }
 
+            // -------- Render table --------
             function render() {
                 const thead = document.getElementById('tableHead');
                 const tbody = document.getElementById('tableBody');
 
-                thead.innerHTML = `<tr>${templateColumns.map(c => `<th>${c.label}</th>`).join('')}</tr>`;
+                const cols = getOutputColumns();
+                thead.innerHTML = `<tr>${cols.map(c => `<th>${c.label}</th>`).join('')}</tr>`;
 
                 let data = processedData;
                 if (showChangesOnly) {
@@ -803,7 +856,7 @@
                 }
 
                 if (data.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="${templateColumns.length}" style="text-align:center;padding:40px;color:#3a4f5f;">
+                    tbody.innerHTML = `<tr><td colspan="${cols.length}" style="text-align:center;padding:40px;color:#3a4f5f;">
                         No records match your filter.
                     </td></tr>`;
                     return;
@@ -813,19 +866,13 @@
                 data.forEach((item) => {
                     const row = item.mapped;
                     const changes = item.changes;
-                    const hasChanges = item.hasChanges;
-                    const rowClass = hasChanges ? 'highlight-row' : '';
+                    const rowClass = item.hasChanges ? 'highlight-row' : '';
 
                     let cellsHtml = '';
-                    templateColumns.forEach((col) => {
+                    cols.forEach((col) => {
                         const val = row[col.key] !== undefined ? row[col.key] : '';
-                        let displayVal = String(val);
-                        let isChanged = false;
-
-                        if (changes[col.key]) {
-                            isChanged = true;
-                        }
-
+                        const displayVal = String(val);
+                        const isChanged = !!changes[col.key];
                         const cellClass = isChanged ? 'cell-changed' : '';
                         cellsHtml += `<td>${isChanged ? '<span class="' + cellClass + '">' : ''}${displayVal}${isChanged ? '</span>' : ''}</td>`;
                     });
@@ -838,41 +885,18 @@
                 document.getElementById('changeCount').textContent = totalChanges;
             }
 
+            // -------- Apply settings (re-process with new defaults) --------
             function applySettings() {
-                if (processedData.length === 0) {
+                if (!rawRows || rawRows.length === 0) {
                     alert('No data loaded. Please load a file first.');
                     return;
                 }
-
-                const defaults = getDefaults();
-                if (window._rawRows) {
-                    const rows = window._rawRows;
-                    const dataRows = rows.slice(1);
-                    processedData = dataRows.map((row) => {
-                        const { transformed, changes } = transformRow(row);
-                        const { mapped, changes: mappedChanges } = mapToTemplate(transformed, changes, defaults);
-                        const hasChanges = Object.keys(mappedChanges).length > 0;
-                        return {
-                            mapped: mapped,
-                            changes: mappedChanges,
-                            hasChanges: hasChanges
-                        };
-                    });
-                    totalChanges = 0;
-                    processedData.forEach(p => {
-                        totalChanges += Object.keys(p.changes).length;
-                    });
-                    document.getElementById('rowCount').textContent = processedData.length;
-                    document.getElementById('changeCount').textContent = totalChanges;
-                    render();
-                } else {
-                    alert('No raw data available. Please reload the file.');
-                }
+                processRows();
             }
 
+            // -------- Load data from file --------
             function loadData() {
                 const fileInput = document.getElementById('fileInput');
-
                 if (fileInput.files.length === 0) {
                     alert('Please select an Excel (.xlsx / .xls) or CSV file.');
                     return;
@@ -894,8 +918,8 @@
                                 return;
                             }
                             const filtered = rows.filter(row => row.some(cell => cell !== undefined && cell !== ''));
-                            window._rawRows = filtered;
-                            processRows(filtered);
+                            rawRows = filtered;
+                            processRows();
                         } catch (err) {
                             alert('Error reading Excel file: ' + err.message);
                         }
@@ -927,10 +951,11 @@
                     while (row.length < maxCols) row.push('');
                     return row;
                 });
-                window._rawRows = padded;
-                processRows(padded);
+                rawRows = padded;
+                processRows();
             }
 
+            // -------- Reset --------
             function resetAll() {
                 document.getElementById('fileInput').value = '';
                 document.getElementById('tableWrapper').style.display = 'none';
@@ -938,42 +963,17 @@
                 totalChanges = 0;
                 showChangesOnly = false;
                 searchTerm = '';
-                window._rawRows = null;
+                rawRows = null;
+                headerRow = null;
+                columnIndices = {};
                 document.getElementById('searchInput').value = '';
                 document.getElementById('toggleChangesBtn').textContent = '🔍 Show changes only';
                 document.getElementById('rowCount').textContent = '0';
                 document.getElementById('changeCount').textContent = '0';
             }
 
-            document.getElementById('todayBtn').addEventListener('click', function() {
-                const today = new Date();
-                const dateStr = today.toISOString().split('T')[0];
-                document.getElementById('autoDateInput').value = dateStr;
-            });
-
-            (function setDefaultDate() {
-                const today = new Date();
-                const dateStr = today.toISOString().split('T')[0];
-                document.getElementById('autoDateInput').value = dateStr;
-            })();
-
-            document.getElementById('loadBtn').addEventListener('click', loadData);
-            document.getElementById('resetBtn').addEventListener('click', resetAll);
-            document.getElementById('applySettingsBtn').addEventListener('click', applySettings);
-
-            document.getElementById('searchInput').addEventListener('input', (e) => {
-                searchTerm = e.target.value;
-                render();
-            });
-
-            document.getElementById('toggleChangesBtn').addEventListener('click', () => {
-                showChangesOnly = !showChangesOnly;
-                document.getElementById('toggleChangesBtn').textContent =
-                    showChangesOnly ? '🔍 Show all rows' : '🔍 Show changes only';
-                render();
-            });
-
-            document.getElementById('exportBtn').addEventListener('click', () => {
+            // -------- Export --------
+            function exportExcel() {
                 if (processedData.length === 0) {
                     alert('No data to export.');
                     return;
@@ -1008,9 +1008,10 @@
                 const clean = (str) => str.replace(/[^a-zA-Z0-9\-_\s]/g, '').trim();
                 const fileName = `SUMMARY ${clean(bank)} ${clean(remarks)} ${dateFormatted}.xlsx`;
 
-                const header = templateColumns.map(c => c.label);
+                const cols = getOutputColumns();
+                const header = cols.map(c => c.label);
                 const rows = data.map(item => {
-                    return templateColumns.map(c => {
+                    return cols.map(c => {
                         let val = item.mapped[c.key] !== undefined ? item.mapped[c.key] : '';
                         if (c.key === 'autoDate' && val) {
                             const parts = String(val).split('-');
@@ -1035,7 +1036,7 @@
                     }
                 }
 
-                ws['!cols'] = templateColumns.map(c => ({ wch: Math.max(c.label.length * 1.2, 12) }));
+                ws['!cols'] = cols.map(c => ({ wch: Math.max(c.label.length * 1.2, 12) }));
 
                 const wb = XLSX.utils.book_new();
                 XLSX.utils.book_append_sheet(wb, ws, 'SUMMARY');
@@ -1052,7 +1053,38 @@
                 link.download = fileName;
                 link.click();
                 URL.revokeObjectURL(link.href);
+            }
+
+            // -------- Event listeners --------
+            document.getElementById('todayBtn').addEventListener('click', function() {
+                const today = new Date();
+                const dateStr = today.toISOString().split('T')[0];
+                document.getElementById('autoDateInput').value = dateStr;
             });
+
+            (function setDefaultDate() {
+                const today = new Date();
+                const dateStr = today.toISOString().split('T')[0];
+                document.getElementById('autoDateInput').value = dateStr;
+            })();
+
+            document.getElementById('loadBtn').addEventListener('click', loadData);
+            document.getElementById('resetBtn').addEventListener('click', resetAll);
+            document.getElementById('applySettingsBtn').addEventListener('click', applySettings);
+
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                searchTerm = e.target.value;
+                render();
+            });
+
+            document.getElementById('toggleChangesBtn').addEventListener('click', () => {
+                showChangesOnly = !showChangesOnly;
+                document.getElementById('toggleChangesBtn').textContent =
+                    showChangesOnly ? '🔍 Show all rows' : '🔍 Show changes only';
+                render();
+            });
+
+            document.getElementById('exportBtn').addEventListener('click', exportExcel);
 
             document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('en-PH', {
                 year: 'numeric',
@@ -1061,7 +1093,7 @@
             });
 
             document.getElementById('tableWrapper').style.display = 'none';
-            window._rawRows = null;
+            rawRows = null;
         })();
     </script>
 </body>
