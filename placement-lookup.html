@@ -88,14 +88,34 @@
             border: 1px solid rgba(255, 255, 255, 0.5);
         }
 
-        /* ── Header with Back button ── */
-        .header-row {
-            display: flex;
-            justify-content: space-between;
+        /* ── Back button row (left aligned, like email-lookup) ── */
+        .back-row {
+            margin-bottom: 18px;
+        }
+        .back-btn {
+            display: inline-flex;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
-            margin-bottom: 24px;
+            gap: 8px;
+            background: rgba(129, 166, 198, 0.85);
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            backdrop-filter: blur(4px);
+        }
+        .back-btn:hover {
+            background: #6a8fb0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(129, 166, 198, 0.3);
+        }
+        .back-btn:active {
+            transform: scale(0.97);
         }
 
         h1 {
@@ -106,7 +126,7 @@
             align-items: center;
             gap: 12px;
             flex-wrap: wrap;
-            margin: 0;
+            margin: 0 0 4px 0;
         }
         h1 span {
             background: #eef4ff;
@@ -115,35 +135,6 @@
             font-weight: 600;
             padding: 2px 16px;
             border-radius: 40px;
-        }
-
-        .back-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 22px;
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            border: 1px solid rgba(210, 196, 180, 0.4);
-            border-radius: 40px;
-            font-size: 14px;
-            font-weight: 600;
-            color: #2c3e50;
-            text-decoration: none;
-            transition: all 0.25s ease;
-            white-space: nowrap;
-        }
-
-        .back-btn:hover {
-            background: rgba(255, 255, 255, 0.9);
-            border-color: rgba(129, 166, 198, 0.7);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(129, 166, 198, 0.15);
-        }
-
-        .back-btn:active {
-            transform: scale(0.97);
         }
 
         /* ----- Status bar (auto‑load) ----- */
@@ -445,13 +436,6 @@
             h1 {
                 font-size: 20px;
             }
-            .header-row {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .back-btn {
-                align-self: flex-start;
-            }
             .status-bar {
                 flex-direction: column;
                 align-items: stretch;
@@ -487,14 +471,15 @@
 
     <div class="container">
 
-        <!-- ═══ HEADER WITH BACK BUTTON ═══ -->
-        <div class="header-row">
-            <h1>
-                👀 PLACEMENT LOOKUP
-                <span>Excel</span>
-            </h1>
-            <a href="index.html" class="back-btn">← Back</a>
+        <!-- ═══ BACK BUTTON ROW (left aligned, same as email-lookup) ═══ -->
+        <div class="back-row">
+            <a href="index.html" class="back-btn">← Back to Dashboard</a>
         </div>
+
+        <h1>
+            👀 PLACEMENT LOOKUP
+            <span>Excel</span>
+        </h1>
 
         <!-- Status bar: auto-load + fallback -->
         <div class="status-bar" id="statusBar">
